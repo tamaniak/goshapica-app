@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GoShaPica by GoShapo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        /* Google Stitch-inspired design system */
+        :root {
+            --primary: #1a73e8;
+            --primary-hover: #1557b0;
+            --primary-light: rgba(26, 115, 232, 0.08);
+            --secondary: #34a853;
+            --accent: #fbbc04;
+            --surface: #ffffff;
+            --background: #f8f9fa;
+            --surface-variant: #f1f3f4;
+            --text-primary: #202124;
+            --text-secondary: #5f6368;
+            --text-disabled: #9aa0a6;
+            --border: #dadce0;
+            --border-focus: #4285f4;
+            --error: #ea4335;
+            --success: #34a853;
+            --warning: #fbbc04;
+            --shadow-1: 0 1px 2px 0 rgba(60,64,67,.3), 0 1px 3px 1px rgba(60,64,67,.15);
+            --shadow-2: 0 1px 3px 0 rgba(60,64,67,.3), 0 4px 8px 3px rgba(60,64,67,.15);
+            --shadow-3: 0 4px 8px 3px rgba(60,64,67,.15), 0 1px 3px 0 rgba(60,64,67,.3);
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --radius-xl: 24px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Google Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .app-container {
+            min-height: 100vh;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-1);
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .logo-icon {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo h1 {
+            font-size: 2rem;
+            font-weight: 500;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .tagline {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        /* Main content */
+        .main-content {
+            flex: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        @media (max-width: 768px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: var(--shadow-1);
+            border: 1px solid var(--border);
+            transition: all 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-2);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--surface-variant);
+        }
+
+        .card-header h2 {
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .card-icon {
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+
+        /* Upload area */
+        .upload-zone {
+            border: 2px dashed var(--border);
+            border-radius: var(--radius-md);
+            padding: 48px 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+            background: var(--surface);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upload-zone:hover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+            transform: translateY(-2px);
+        }
+
+        .upload-zone.dragover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+            box-shadow: var(--shadow-2);
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .upload-zone:hover .upload-icon {
+            color: var(--primary);
+            transform: scale(1.1);
+        }
+
+        .upload-text {
+            font-size: 1.125rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .upload-subtext {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border-radius: var(--radius-xl);
+            border: none;
+            font-family: inherit;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
+            text-decoration: none;
+            white-space: nowrap;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s;
+        }
+
+        .btn:active::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), #4285f4);
+            color: white;
+            box-shadow: var(--shadow-1);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-2);
+        }
+
+        .btn-secondary {
+            background: var(--surface);
+            color: var(--primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-light);
+            border-color: var(--primary);
+        }
+
+        /* Frame selection */
+        .frame-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 16px;
+            justify-items: center;
+        }
+
+        .frame-card {
+            border: 2px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+            text-align: center;
+            background: var(--surface);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .frame-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .frame-card:hover::before {
+            left: 100%;
+        }
+
+        .frame-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-2);
+        }
+
+        .frame-card.selected {
+            border-color: var(--primary);
+            background: var(--primary-light);
+            box-shadow: var(--shadow-2);
+        }
+
+        .frame-preview {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 12px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .frame-name {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        /* Frame styles */
+        .frame-classic {
+            background: linear-gradient(135deg, #8B4513, #D2B48C, #8B4513);
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.3);
+        }
+
+        .frame-modern {
+            background: linear-gradient(135deg, #2c3e50, #34495e, #2c3e50);
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        .frame-gold {
+            background: linear-gradient(135deg, #FFD700, #FFA500, #FFD700);
+            box-shadow: inset 0 0 20px rgba(255,215,0,0.5);
+        }
+
+        .frame-silver {
+            background: linear-gradient(135deg, #C0C0C0, #E5E5E5, #C0C0C0);
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.2);
+        }
+
+        .frame-vintage {
+            background: linear-gradient(135deg, #8B7355, #A0522D, #8B7355);
+            box-shadow: inset 0 0 20px rgba(139,115,85,0.5);
+        }
+
+        .frame-neon {
+            background: linear-gradient(135deg, #ff00ff, #00ffff, #ff00ff);
+            box-shadow: 0 0 20px rgba(255,0,255,0.5);
+        }
+
+        /* Preview section */
+        .preview-section {
+            grid-column: 1 / -1;
+            text-align: center;
+        }
+
+        .canvas-container {
+            margin: 24px 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        #canvas {
+            max-width: 100%;
+            max-height: 500px;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-3);
+            border: 1px solid var(--border);
+        }
+
+        .preview-image {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: var(--radius-md);
+            margin: 16px 0;
+            box-shadow: var(--shadow-1);
+        }
+
+        .actions {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 24px;
+        }
+
+        /* Status messages */
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 16px;
+            border-radius: var(--radius-md);
+            margin: 16px 0;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .status.success {
+            background: rgba(52, 168, 83, 0.1);
+            color: var(--success);
+            border: 1px solid rgba(52, 168, 83, 0.2);
+        }
+
+        .status.error {
+            background: rgba(234, 67, 53, 0.1);
+            color: var(--error);
+            border: 1px solid rgba(234, 67, 53, 0.2);
+        }
+
+        .status.warning {
+            background: rgba(251, 188, 4, 0.1);
+            color: var(--warning);
+            border: 1px solid rgba(251, 188, 4, 0.2);
+        }
+
+        /* Utilities */
+        .hidden { display: none !important; }
+
+        /* Loading spinner */
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid transparent;
+            border-top: 2px solid currentColor;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive design */
+        @media (max-width: 640px) {
+            .app-container { padding: 12px; }
+            .header { padding: 20px 16px; }
+            .logo h1 { font-size: 1.5rem; }
+            .card { padding: 20px; }
+            .upload-zone { padding: 32px 16px; }
+            .frame-grid { grid-template-columns: repeat(2, 1fr); }
+            .actions { flex-direction: column; align-items: center; }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s cubic-bezier(0.4, 0.0, 0.2, 1);
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <h1>GoShaPica</h1>
+            </div>
+            <p class="tagline">by GoShapo • Create beautiful framed photos in seconds</p>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="content-grid">
+                <!-- Upload Section -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Upload Your Photo</h2>
+                    </div>
+                    
+                    <div class="upload-zone" id="uploadZone">
+                        <div class="upload-text">Drop your photo here</div>
+                        <div class="upload-subtext">or click to browse • JPG, PNG up to 10MB</div>
+                    </div>
+                    
+                    <input type="file" id="fileInput" accept="image/*" class="hidden">
+                    <img id="uploadedImage" class="preview-image hidden">
+                    <div id="uploadStatus"></div>
+                </div>
+
+                <!-- Frame Selection -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Choose Your Frame</h2>
+                    </div>
+                    
+                    <div class="frame-grid">
+                        <div class="frame-card selected" data-frame="classic">
+                            <div class="frame-preview frame-classic"></div>
+                            <div class="frame-name">Classic Wood</div>
+                        </div>
+                    </div>
+
+                    <div id="frameStatus"></div>
+                </div>
+            </div>
+
+            <!-- Preview Section -->
+            <div class="card preview-section hidden" id="previewSection">
+                <div class="card-header">
+                    <span class="material-icons card-icon">preview</span>
+                    <h2>Your Framed Photo</h2>
+                </div>
+                
+                <div class="canvas-container">
+                    <canvas id="canvas"></canvas>
+                </div>
+                
+                <div class="actions">
+                    <button class="btn btn-primary" id="downloadBtn">
+                        <span class="material-icons">download</span>
+                        Download Photo
+                    </button>
+                    <button class="btn btn-secondary" id="resetBtn">
+                        <span class="material-icons">refresh</span>
+                        Start Over
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        class GoShaPica {
+            constructor() {
+                this.uploadedImage = null;
+                this.selectedFrame = 'classic'; // Auto-select the only frame
+                this.canvas = document.getElementById('canvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.isProcessing = false;
+                
+                this.initEventListeners();
+            }
+
+            initEventListeners() {
+                // File upload events
+                const uploadZone = document.getElementById('uploadZone');
+                const fileInput = document.getElementById('fileInput');
+
+                uploadZone.addEventListener('click', () => fileInput.click());
+                uploadZone.addEventListener('dragover', this.handleDragOver.bind(this));
+                uploadZone.addEventListener('dragleave', this.handleDragLeave.bind(this));
+                uploadZone.addEventListener('drop', this.handleDrop.bind(this));
+                fileInput.addEventListener('change', this.handleFileSelect.bind(this));
+
+                // Frame selection events
+                document.querySelectorAll('.frame-card').forEach(card => {
+                    card.addEventListener('click', this.selectFrame.bind(this));
+                });
+
+                // Action button events
+                document.getElementById('downloadBtn').addEventListener('click', this.downloadImage.bind(this));
+                document.getElementById('resetBtn').addEventListener('click', this.reset.bind(this));
+            }
+
+            handleDragOver(e) {
+                e.preventDefault();
+                e.currentTarget.classList.add('dragover');
+            }
+
+            handleDragLeave(e) {
+                e.preventDefault();
+                e.currentTarget.classList.remove('dragover');
+            }
+
+            handleDrop(e) {
+                e.preventDefault();
+                e.currentTarget.classList.remove('dragover');
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    this.processFile(files[0]);
+                }
+            }
+
+            handleFileSelect(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    this.processFile(file);
+                }
+            }
+
+            processFile(file) {
+                // Validate file type
+                if (!file.type.startsWith('image/')) {
+                    this.showStatus('uploadStatus', 'Please select a valid image file (JPG, PNG)', 'error');
+                    return;
+                }
+
+                // Validate file size (10MB limit)
+                if (file.size > 10 * 1024 * 1024) {
+                    this.showStatus('uploadStatus', 'File size must be less than 10MB', 'error');
+                    return;
+                }
+
+                this.isProcessing = true;
+                this.showStatus('uploadStatus', 'Processing image...', 'warning');
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        this.uploadedImage = img;
+                        this.displayUploadedImage(e.target.result);
+                        this.showStatus('uploadStatus', 'Image uploaded successfully! Now choose a frame.', 'success');
+                        this.isProcessing = false;
+                        this.updatePreview();
+                    };
+                    img.onerror = () => {
+                        this.showStatus('uploadStatus', 'Error loading image. Please try again.', 'error');
+                        this.isProcessing = false;
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+
+            displayUploadedImage(src) {
+                const previewImg = document.getElementById('uploadedImage');
+                previewImg.src = src;
+                previewImg.classList.remove('hidden');
+                previewImg.classList.add('fade-in');
+            }
+
+            selectFrame(e) {
+                if (this.isProcessing) return;
+
+                // Remove previous selection
+                document.querySelectorAll('.frame-card').forEach(card => {
+                    card.classList.remove('selected');
+                });
+
+                // Add selection to clicked frame
+                const frameCard = e.currentTarget;
+                frameCard.classList.add('selected');
+                this.selectedFrame = frameCard.dataset.frame;
+
+                const frameName = frameCard.querySelector('.frame-name').textContent;
+                this.showStatus('frameStatus', `${frameName} frame selected`, 'success');
+                this.updatePreview();
+            }
+
+            updatePreview() {
+                if (!this.uploadedImage) return; // Frame is already selected
+
+                const previewSection = document.getElementById('previewSection');
+                previewSection.classList.remove('hidden');
+                previewSection.classList.add('fade-in');
+                previewSection.scrollIntoView({ behavior: 'smooth' });
+
+                this.drawImageWithFrame();
+            }
+
+            drawImageWithFrame() {
+                const img = this.uploadedImage;
+                const frameWidth = Math.max(30, Math.min(img.width, img.height) * 0.05); // Dynamic frame width
+                
+                // Set canvas dimensions
+                this.canvas.width = img.width + (frameWidth * 2);
+                this.canvas.height = img.height + (frameWidth * 2);
+
+                // Clear canvas
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+                // Draw frame
+                this.drawFrame(frameWidth);
+
+                // Draw image
+                this.ctx.drawImage(img, frameWidth, frameWidth, img.width, img.height);
+
+                // Add frame effects
+                this.addFrameEffects(frameWidth);
+            }
+
+            drawFrame(frameWidth) {
+                let gradient;
+                const { width, height } = this.canvas;
+
+                switch (this.selectedFrame) {
+                    case 'classic':
+                        gradient = this.ctx.createLinearGradient(0, 0, width, height);
+                        gradient.addColorStop(0, '#8B4513');
+                        gradient.addColorStop(0.5, '#D2B48C');
+                        gradient.addColorStop(1, '#8B4513');
+                        break;
+                    case 'modern':
+                        gradient = this.ctx.createLinearGradient(0, 0, width, height);
+                        gradient.addColorStop(0, '#2c3e50');
+                        gradient.addColorStop(0.5, '#34495e');
+                        gradient.addColorStop(1, '#2c3e50');
+                        break;
+                    case 'gold':
+                        gradient = this.ctx.createLinearGradient(0, 0, width, height);
+                        gradient.addColorStop(0, '#FFD700');
+                        gradient.addColorStop(0.5, '#FFA500');
+                        gradient.addColorStop(1, '#FFD700');
+                        break;
+                    case 'silver':
+                        gradient = this.ctx.createLinearGradient(0, 0, width, height);
+                        gradient.addColorStop(0, '#C0C0C0');
+                        gradient.addColorStop(0.5, '#E5E5E5');
+                        gradient.addColorStop(1, '#C0C0C0');
+                        break;
+                    case 'vintage':
+                        gradient = this.ctx.createLinearGradient(0, 0, width, height);
+                        gradient.addColorStop(0, '#8B7355');
+                        gradient.addColorStop(0.5, '#A0522D');
+                        gradient.addColorStop(1, '#8B7355');
+                        break;
+                    case 'neon':
+                        gradient = this.ctx.createLinearGradient(0, 0, width, height);
+                        gradient.addColorStop(0, '#ff00ff');
+                        gradient.addColorStop(0.5, '#00ffff');
+                        gradient.addColorStop(1, '#ff00ff');
+                        break;
+                }
+
+                this.ctx.fillStyle = gradient;
+                this.ctx.fillRect(0, 0, width, height);
+            }
+
+            addFrameEffects(frameWidth) {
+                const { width, height } = this.canvas;
+
+                // Inner shadow
+                this.ctx.strokeStyle = 'rgba(0,0,0,0.4)';
+                this.ctx.lineWidth = 2;
+                this.ctx.strokeRect(frameWidth - 1, frameWidth - 1, 
+                    width - (frameWidth * 2) + 2, height - (frameWidth * 2) + 2);
+
+                // Outer highlight
+                this.ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+                this.ctx.lineWidth = 1;
+                this.ctx.strokeRect(2, 2, width - 4, height - 4);
+
+                // Special effects for specific frames
+                if (this.selectedFrame === 'neon') {
+                    this.ctx.shadowColor = '#ff00ff';
+                    this.ctx.shadowBlur = 20;
+                    this.ctx.strokeStyle = '#ffffff';
+                    this.ctx.lineWidth = 1;
+                    this.ctx.strokeRect(frameWidth, frameWidth, 
+                        width - (frameWidth * 2), height - (frameWidth * 2));
+                    this.ctx.shadowBlur = 0;
+                }
+            }
+
+            downloadImage() {
+                if (!this.canvas) return;
+
+                try {
+                    const link = document.createElement('a');
+                    link.download = `goshapica-framed-photo-${Date.now()}.png`;
+                    link.href = this.canvas.toDataURL('image/png', 1.0);
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+
+                    this.showStatus('frameStatus', 'Photo downloaded successfully!', 'success');
+                } catch (error) {
+                    this.showStatus('frameStatus', 'Error downloading photo. Please try again.', 'error');
+                }
+            }
+
+            showStatus(elementId, message, type) {
+                const statusElement = document.getElementById(elementId);
+                const iconMap = {
+                    success: 'check_circle',
+                    error: 'error',
+                    warning: 'warning'
+                };
+
+                statusElement.innerHTML = `
+                    <div class="status ${type} fade-in">
+                        <span class="material-icons">${iconMap[type]}</span>
+                        ${message}
+                    </div>
+                `;
+                
+                // Auto-hide after 4 seconds
+                setTimeout(() => {
+                    if (statusElement.innerHTML.includes(message)) {
+                        statusElement.innerHTML = '';
+                    }
+                }, 4000);
+            }
+
+            reset() {
+                this.uploadedImage = null;
+                this.selectedFrame = null;
+                this.isProcessing = false;
+                
+                // Reset UI elements
+                document.getElementById('uploadedImage').classList.add('hidden');
+                document.getElementById('previewSection').classList.add('hidden');
+                document.querySelectorAll('.frame-card').forEach(card => {
+                    card.classList.remove('selected');
+                });
+                document.getElementById('fileInput').value = '';
+                document.getElementById('uploadStatus').innerHTML = '';
+                document.getElementById('frameStatus').innerHTML = '';
+
+                // Scroll to top
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        // Initialize app when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new GoShaPica();
+        });
+
+        // Add some nice entrance animations
+        window.addEventListener('load', () => {
+            document.querySelector('.header').classList.add('fade-in');
+            document.queryS
