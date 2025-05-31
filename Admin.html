@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GoShaPica Admin Panel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1a73e8;
+            --primary-hover: #1557b0;
+            --surface: #ffffff;
+            --background: #f8f9fa;
+            --text-primary: #202124;
+            --text-secondary: #5f6368;
+            --border: #dadce0;
+            --success: #34a853;
+            --error: #ea4335;
+            --shadow-1: 0 1px 2px 0 rgba(60,64,67,.3), 0 1px 3px 1px rgba(60,64,67,.15);
+            --shadow-2: 0 1px 3px 0 rgba(60,64,67,.3), 0 4px 8px 3px rgba(60,64,67,.15);
+            --radius-md: 8px;
+            --radius-lg: 12px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Google Sans', sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        .header {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-1);
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 768px) {
+            .grid { grid-template-columns: 1fr; }
+        }
+
+        .card {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: var(--shadow-1);
+            border: 1px solid var(--border);
+        }
+
+        .card h2 {
+            font-size: 1.25rem;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+        }
+
+        .upload-area {
+            border: 2px dashed var(--border);
+            border-radius: var(--radius-md);
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 16px;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary);
+            background: rgba(26, 115, 232, 0.04);
+        }
+
+        .upload-area.dragover {
+            border-color: var(--primary);
+            background: rgba(26, 115, 232, 0.08);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border-radius: 24px;
+            border: none;
+            font-family: inherit;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            box-shadow: var(--shadow-2);
+        }
+
+        .btn-danger {
+            background: var(--error);
+            color: white;
+        }
+
+        .input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            font-family: inherit;
+            font-size: 0.875rem;
+            margin-bottom: 16px;
+        }
+
+        .input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
+        }
+
+        .frame-list {
+            display: grid;
+            gap: 16px;
+        }
+
+        .frame-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            background: var(--surface);
+        }
+
+        .frame-preview {
+            width: 60px;
+            height: 60px;
+            border-radius: var(--radius-md);
+            object-fit: cover;
+            border: 1px solid var(--border);
+        }
+
+        .frame-info {
+            flex: 1;
+        }
+
+        .frame-name {
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .frame-meta {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .status {
+            padding: 12px 16px;
+            border-radius: var(--radius-md);
+            margin: 16px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status.success {
+            background: rgba(52, 168, 83, 0.1);
+            color: var(--success);
+            border: 1px solid rgba(52, 168, 83, 0.2);
+        }
+
+        .status.error {
+            background: rgba(234, 67, 53, 0.1);
+            color: var(--error);
+            border: 1px solid rgba(234, 67, 53, 0.2);
+        }
+
+        .hidden { display: none !important; }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            padding: 20px;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-1);
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>GoShaPica Admin Panel</h1>
+            <p>Manage frames and monitor app usage</p>
+        </header>
+
+        <!-- Stats -->
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number" id="totalFrames">3</div>
+                <div class="stat-label">Total Frames</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalUsers">0</div>
+                <div class="stat-label">Photos Processed</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="activeFrames">3</div>
+                <div class="stat-label">Active Frames</div>
+            </div>
+        </div>
+
+        <div class="grid">
+            <!-- Upload New Frame -->
+            <div class="card">
+                <h2>Upload New Frame</h2>
+                
+                <form id="frameUploadForm">
+                    <input type="text" class="input" id="frameName" placeholder="Frame name (e.g., Classic Wood)" required>
+                    
+                    <div class="upload-area" id="frameUploadArea">
+                        <span class="material-icons" style="font-size: 3rem; color: var(--text-secondary); margin-bottom: 16px;">add_photo_alternate</span>
+                        <div style="font-size: 1.125rem; margin-bottom: 8px;">Upload Frame Image</div>
+                        <div style="font-size: 0.875rem; color: var(--text-secondary);">PNG with transparent center recommended</div>
+                    </div>
+                    
+                    <input type="file" id="frameFileInput" accept="image/*" class="hidden">
+                    
+                    <img id="framePreview" style="max-width: 100%; max-height: 200px; border-radius: var(--radius-md); margin: 16px 0;" class="hidden">
+                    
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        <span class="material-icons">upload</span>
+                        Upload Frame
+                    </button>
+                </form>
+                
+                <div id="uploadStatus"></div>
+            </div>
+
+            <!-- Manage Existing Frames -->
+            <div class="card">
+                <h2>Manage Frames</h2>
+                
+                <div class="frame-list" id="frameList">
+                    <!-- Sample frames will be loaded here -->
+                    <div class="frame-item">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Crect width='60' height='60' fill='%238B4513'/%3E%3C/svg%3E" class="frame-preview" alt="Classic Wood">
+                        <div class="frame-info">
+                            <div class="frame-name">Classic Wood</div>
+                            <div class="frame-meta">Active • Uploaded today</div>
+                        </div>
+                        <button class="btn btn-danger" onclick="deleteFrame('classic')">
+                            <span class="material-icons">delete</span>
+                        </button>
+                    </div>
+                    
+                    <div class="frame-item">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Crect width='60' height='60' fill='%23333'/%3E%3C/svg%3E" class="frame-preview" alt="Modern Black">
+                        <div class="frame-info">
+                            <div class="frame-name">Modern Black</div>
+                            <div class="frame-meta">Active • Uploaded today</div>
+                        </div>
+                        <button class="btn btn-danger" onclick="deleteFrame('modern')">
+                            <span class="material-icons">delete</span>
+                        </button>
+                    </div>
+                    
+                    <div class="frame-item">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Crect width='60' height='60' fill='%23FFD700'/%3E%3C/svg%3E" class="frame-preview" alt="Elegant Gold">
+                        <div class="frame-info">
+                            <div class="frame-name">Elegant Gold</div>
+                            <div class="frame-meta">Active • Uploaded today</div>
+                        </div>
+                        <button class="btn btn-danger" onclick="deleteFrame('gold')">
+                            <span class="material-icons">delete</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class AdminPanel {
+            constructor() {
+                this.frames = [
+                    { id: 'classic', name: 'Classic Wood', active: true },
+                    { id: 'modern', name: 'Modern Black', active: true },
+                    { id: 'gold', name: 'Elegant Gold', active: true }
+                ];
+                
+                this.initEventListeners();
+                this.loadFrames();
+            }
+
+            initEventListeners() {
+                const uploadArea = document.getElementById('frameUploadArea');
+                const fileInput = document.getElementById('frameFileInput');
+                const form = document.getElementById('frameUploadForm');
+
+                uploadArea.addEventListener('click', () => fileInput.click());
+                uploadArea.addEventListener('dragover', this.handleDragOver.bind(this));
+                uploadArea.addEventListener('drop', this.handleDrop.bind(this));
+                fileInput.addEventListener('change', this.handleFileSelect.bind(this));
+                form.addEventListener('submit', this.handleFormSubmit.bind(this));
+            }
+
+            handleDragOver(e) {
+                e.preventDefault();
+                e.currentTarget.classList.add('dragover');
+            }
+
+            handleDrop(e) {
+                e.preventDefault();
+                e.currentTarget.classList.remove('dragover');
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    this.handleFileSelect({ target: { files } });
+                }
+            }
+
+            handleFileSelect(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                if (!file.type.startsWith('image/')) {
+                    this.showStatus('Please select an image file', 'error');
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const preview = document.getElementById('framePreview');
+                    preview.src = e.target.result;
+                    preview.classList.remove('hidden');
+                };
+                reader.readAsDataURL(file);
+            }
+
+            handleFormSubmit(e) {
+                e.preventDefault();
+                
+                const name = document.getElementById('frameName').value;
+                const fileInput = document.getElementById('frameFileInput');
+                
+                if (!name || !fileInput.files[0]) {
+                    this.showStatus('Please provide frame name and image', 'error');
+                    return;
+                }
+
+                // In a real app, you'd upload to your AWS S3 here
+                this.uploadFrame(name, fileInput.files[0]);
+            }
+
+            uploadFrame(name, file) {
+                // Simulate upload process
+                this.showStatus('Uploading frame...', 'info');
+                
+                setTimeout(() => {
+                    const newFrame = {
+                        id: Date.now().toString(),
+                        name: name,
+                        active: true,
+                        file: file
+                    };
+                    
+                    this.frames.push(newFrame);
+                    this.updateStats();
+                    this.loadFrames();
+                    this.resetForm();
+                    this.showStatus(`Frame "${name}" uploaded successfully!`, 'success');
+                    
+                    // In real app: Send to your Next.js API endpoint
+                    console.log('Would upload to:', '/api/admin/frames', newFrame);
+                }, 1500);
+            }
+
+            deleteFrame(frameId) {
+                if (confirm('Are you sure you want to delete this frame?')) {
+                    this.frames = this.frames.filter(frame => frame.id !== frameId);
+                    this.updateStats();
+                    this.loadFrames();
+                    this.showStatus('Frame deleted successfully', 'success');
+                    
+                    // In real app: Call delete API
+                    console.log('Would delete:', `/api/admin/frames/${frameId}`);
+                }
+            }
+
+            loadFrames() {
+                const frameList = document.getElementById('frameList');
+                frameList.innerHTML = this.frames.map(frame => `
+                    <div class="frame-item">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Crect width='60' height='60' fill='%23ccc'/%3E%3C/svg%3E" class="frame-preview" alt="${frame.name}">
+                        <div class="frame-info">
+                            <div class="frame-name">${frame.name}</div>
+                            <div class="frame-meta">${frame.active ? 'Active' : 'Inactive'} • Uploaded recently</div>
+                        </div>
+                        <button class="btn btn-danger" onclick="adminPanel.deleteFrame('${frame.id}')">
+                            <span class="material-icons">delete</span>
+                        </button>
+                    </div>
+                `).join('');
+            }
+
+            updateStats() {
+                document.getElementById('totalFrames').textContent = this.frames.length;
+                document.getElementById('activeFrames').textContent = this.frames.filter(f => f.active).length;
+            }
+
+            resetForm() {
+                document.getElementById('frameUploadForm').reset();
+                document.getElementById('framePreview').classList.add('hidden');
+            }
+
+            showStatus(message, type) {
+                const statusDiv = document.getElementById('uploadStatus');
+                const icon = type === 'success' ? 'check_circle' : type === 'error' ? 'error' : 'info';
+                
+                statusDiv.innerHTML = `
+                    <div class="status ${type}">
+                        <span class="material-icons">${icon}</span>
+                        ${message}
+                    </div>
+                `;
+                
+                setTimeout(() => statusDiv.innerHTML = '', 4000);
+            }
+        }
+
+        // Initialize admin panel
+        const adminPanel = new AdminPanel();
+        
+        // Make deleteFrame available globally for inline onclick
+        window.deleteFrame = (frameId) => adminPanel.deleteFrame(frameId);
+    </script>
+</body>
+</html>
