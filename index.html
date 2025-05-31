@@ -163,6 +163,8 @@
             background: var(--surface);
             position: relative;
             overflow: hidden;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
         }
 
         .upload-zone:hover {
@@ -483,11 +485,11 @@
                     </div>
                     
                     <div class="upload-zone" id="uploadZone">
-                        <div class="upload-text">Drop your photo here</div>
-                        <div class="upload-subtext">or click to browse • JPG, PNG up to 10MB</div>
+                        <div class="upload-text">Tap to upload your photo</div>
+                        <div class="upload-subtext">JPG, PNG up to 10MB</div>
                     </div>
                     
-                    <input type="file" id="fileInput" accept="image/*" class="hidden">
+                    <input type="file" id="fileInput" accept="image/*" style="display: none;">
                     <img id="uploadedImage" class="preview-image hidden">
                     <div id="uploadStatus"></div>
                 </div>
@@ -551,7 +553,17 @@
                 const uploadZone = document.getElementById('uploadZone');
                 const fileInput = document.getElementById('fileInput');
 
-                uploadZone.addEventListener('click', () => fileInput.click());
+                // Make sure click works on mobile
+                uploadZone.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    fileInput.click();
+                });
+                
+                uploadZone.addEventListener('touchend', (e) => {
+                    e.preventDefault();
+                    fileInput.click();
+                });
+
                 uploadZone.addEventListener('dragover', this.handleDragOver.bind(this));
                 uploadZone.addEventListener('dragleave', this.handleDragLeave.bind(this));
                 uploadZone.addEventListener('drop', this.handleDrop.bind(this));
