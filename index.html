@@ -832,10 +832,127 @@
 
         // Initialize app when page loads
         document.addEventListener('DOMContentLoaded', () => {
+            console.log('GoShaPica app starting...');
+            
+            // Simple, direct event listeners
+            const uploadZone = document.getElementById('uploadZone');
+            const fileInput = document.getElementById('fileInput');
+            
+            if (!uploadZone || !fileInput) {
+                console.error('Upload elements not found');
+                return;
+            }
+            
+            // Click handler
+            uploadZone.addEventListener('click', function(e) {
+                console.log('Upload zone clicked');
+                e.preventDefault();
+                fileInput.click();
+            });
+            
+            // File selection handler
+            fileInput.addEventListener('change', function(e) {
+                console.log('File input changed');
+                const file = e.target.files[0];
+                if (file) {
+                    console.log('File selected:', file.name);
+                    handleFileUpload(file);
+                }
+            });
+            
+            // Initialize the class after DOM is ready
             new GoShaPica();
         });
+        
+        // File upload function
+        function handleFileUpload(file) {
+            console.log('Processing file:', file.name);
+            
+            if (!file.type.startsWith('image/')) {
+                alert('Please select an image file');
+                return;
+            }
 
-        // Add some nice entrance animations
-        window.addEventListener('load', () => {
-            document.querySelector('.header').classList.add('fade-in');
-            document.queryS
+            if (file.size > 10 * 1024 * 1024) {
+                alert('File size must be less than 10MB');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    console.log('Image loaded, drawing...');
+                    drawImageWithFrame(img);
+                    showPreviewSection();
+                };
+                img.src = e.target.result;
+                
+                // Show preview of uploaded image
+                const uploadedImage = document.getElementById('uploadedImage');
+                if (uploadedImage) {
+                    uploadedImage.src = e.target.result;
+                    uploadedImage.classList.remove('hidden');
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        // Draw image with frame
+        function drawImageWithFrame(img) {
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
+            const frameWidth = Math.max(30, Math.min(img.width, img.height) * 0.05);
+            
+            canvas.width = img.width + (frameWidth * 2);
+            canvas.height = img.height + (frameWidth * 2);
+
+            // Draw frame
+            const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+            gradient.addColorStop(0, '#8B4513');
+            gradient.addColorStop(0.5, '#D2B48C');
+            gradient.addColorStop(1, '#8B4513');
+            
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw image
+            ctx.drawImage(img, frameWidth, frameWidth, img.width, img.height);
+
+            // Add frame effects
+            ctx.strokeStyle = 'rgba(0,0,0,0.4)';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(frameWidth - 1, frameWidth - 1, 
+                canvas.width - (frameWidth * 2) + 2, canvas.height - (frameWidth * 2) + 2);
+        }
+        
+        // Show preview section
+        function showPreviewSection() {
+            const previewSection = document.getElementById('previewSection');
+            if (previewSection) {
+                previewSection.classList.remove('hidden');
+                previewSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+        
+        // Download function
+        function downloadImage() {
+            const canvas = document.getElementById('canvas');
+            const link = document.createElement('a');
+            link.download = `goshapica-framed-photo-${Date.now()}.png`;
+            link.href = canvas.toDataURL('image/png', 1.0);
+            link.click();
+        }
+        
+        // Reset function
+        function resetApp() {
+            const uploadedImage = document.getElementById('uploadedImage');
+            const previewSection = document.getElementById('previewSection');
+            const fileInput = document.getElementById('fileInput');
+            
+            if (uploadedImage) uploadedImage.classList.add('hidden');
+            if (previewSection) previewSection.classList.add('hidden');
+            if (fileInput) fileInput.value = '';
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
