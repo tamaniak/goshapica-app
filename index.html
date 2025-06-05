@@ -4,28 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GoShaPica by GoShapo</title>
-    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&family=SF+Pro+Text:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
-        /* Google Stitch-inspired design system */
+        /* Apple-inspired design system */
         :root {
-            --primary: #1a73e8;
-            --primary-hover: #1557b0;
-            --primary-light: rgba(26, 115, 232, 0.08);
-            --secondary: #34a853;
-            --surface: #ffffff;
-            --background: #f8f9fa;
-            --text-primary: #202124;
-            --text-secondary: #5f6368;
-            --border: #dadce0;
-            --error: #ea4335;
-            --success: #34a853;
-            --shadow-1: 0 1px 2px 0 rgba(60,64,67,.3), 0 1px 3px 1px rgba(60,64,67,.15);
-            --shadow-2: 0 1px 3px 0 rgba(60,64,67,.3), 0 4px 8px 3px rgba(60,64,67,.15);
-            --shadow-3: 0 4px 8px 3px rgba(60,64,67,.15), 0 1px 3px 0 rgba(60,64,67,.3);
-            --radius-md: 8px;
-            --radius-lg: 12px;
-            --radius-xl: 24px;
+            --primary: #007AFF;
+            --primary-hover: #0056CC;
+            --primary-light: rgba(0, 122, 255, 0.1);
+            --secondary: #34C759;
+            --surface: #FFFFFF;
+            --surface-secondary: rgba(255, 255, 255, 0.8);
+            --background: #F2F2F7;
+            --background-secondary: #E5E5EA;
+            --text-primary: #000000;
+            --text-secondary: #8E8E93;
+            --text-tertiary: #C7C7CC;
+            --border: rgba(0, 0, 0, 0.1);
+            --border-secondary: rgba(0, 0, 0, 0.05);
+            --error: #FF3B30;
+            --success: #34C759;
+            --warning: #FF9500;
+            --shadow-light: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.08);
+            --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1);
+            --shadow-heavy: 0 8px 25px rgba(0, 0, 0, 0.15), 0 3px 6px rgba(0, 0, 0, 0.1);
+            --blur: blur(20px);
+            --radius-sm: 6px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+            --radius-2xl: 24px;
         }
 
         * {
@@ -35,43 +43,56 @@
         }
 
         body {
-            font-family: 'Google Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', system-ui, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             color: var(--text-primary);
-            line-height: 1.6;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         .app-container {
             min-height: 100vh;
-            padding: 16px;
+            padding: 20px;
             display: flex;
             flex-direction: column;
         }
 
         .header {
-            background: var(--surface);
-            border-radius: var(--radius-lg);
-            padding: 24px;
-            margin-bottom: 24px;
-            box-shadow: var(--shadow-1);
+            background: var(--surface-secondary);
+            backdrop-filter: var(--blur);
+            -webkit-backdrop-filter: var(--blur);
+            border-radius: var(--radius-2xl);
+            padding: 32px;
+            margin-bottom: 28px;
+            box-shadow: var(--shadow-light);
+            border: 1px solid var(--border-secondary);
             text-align: center;
-            border: 1px solid var(--border);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .header:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
         }
 
         .logo h1 {
-            font-size: 2rem;
-            font-weight: 500;
+            font-size: 2.5rem;
+            font-weight: 700;
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
         }
 
         .tagline {
-            font-size: 1rem;
+            font-size: 1.1rem;
             color: var(--text-secondary);
             font-weight: 400;
+            opacity: 0.9;
         }
 
         .main-content {
@@ -84,8 +105,8 @@
         .content-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 24px;
-            margin-bottom: 24px;
+            gap: 28px;
+            margin-bottom: 28px;
         }
 
         @media (max-width: 768px) {
@@ -95,16 +116,19 @@
         }
 
         .card {
-            background: var(--surface);
-            border-radius: var(--radius-lg);
-            padding: 24px;
-            box-shadow: var(--shadow-1);
-            border: 1px solid var(--border);
-            transition: all 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
+            background: var(--surface-secondary);
+            backdrop-filter: var(--blur);
+            -webkit-backdrop-filter: var(--blur);
+            border-radius: var(--radius-2xl);
+            padding: 32px;
+            box-shadow: var(--shadow-light);
+            border: 1px solid var(--border-secondary);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .card:hover {
-            box-shadow: var(--shadow-2);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-heavy);
         }
 
         .card-header {
@@ -112,75 +136,131 @@
             align-items: center;
             justify-content: center;
             gap: 12px;
-            margin-bottom: 20px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid #f1f3f4;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
         }
 
         .card-header h2 {
-            font-size: 1.25rem;
-            font-weight: 500;
+            font-size: 1.4rem;
+            font-weight: 600;
             color: var(--text-primary);
+            letter-spacing: -0.3px;
         }
 
         .upload-zone {
             border: 2px dashed var(--border);
-            border-radius: var(--radius-md);
-            padding: 48px 24px;
+            border-radius: var(--radius-lg);
+            padding: 56px 32px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             background: var(--surface);
-            margin-bottom: 16px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upload-zone::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .upload-zone:hover::before {
+            left: 100%;
         }
 
         .upload-zone:hover {
             border-color: var(--primary);
             background: var(--primary-light);
-            transform: translateY(-2px);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .upload-zone:active {
+            transform: translateY(-1px) scale(1.01);
         }
 
         .upload-text {
-            font-size: 1.125rem;
-            font-weight: 500;
+            font-size: 1.2rem;
+            font-weight: 600;
             color: var(--text-primary);
             margin-bottom: 8px;
+            letter-spacing: -0.2px;
         }
 
         .upload-subtext {
-            font-size: 0.875rem;
+            font-size: 0.95rem;
             color: var(--text-secondary);
+            font-weight: 500;
         }
 
         .frame-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 16px;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 20px;
             justify-items: center;
         }
 
         .frame-card {
             border: 2px solid var(--primary);
-            border-radius: var(--radius-md);
-            padding: 16px;
+            border-radius: var(--radius-lg);
+            padding: 20px;
             text-align: center;
             background: var(--primary-light);
-            box-shadow: var(--shadow-2);
+            box-shadow: var(--shadow-medium);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .frame-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, transparent, rgba(255,255,255,0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .frame-card:hover::before {
+            opacity: 1;
+        }
+
+        .frame-card:hover {
+            transform: translateY(-6px) scale(1.05);
+            box-shadow: var(--shadow-heavy);
         }
 
         .frame-preview {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 12px;
-            border-radius: 4px;
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 16px;
+            border-radius: var(--radius-md);
             background: linear-gradient(135deg, #8B4513, #D2B48C, #8B4513);
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.3);
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.3), var(--shadow-light);
+            transition: all 0.3s ease;
+        }
+
+        .frame-card:hover .frame-preview {
+            transform: scale(1.1);
+            box-shadow: inset 0 0 25px rgba(0,0,0,0.4), var(--shadow-medium);
         }
 
         .frame-name {
-            font-size: 0.875rem;
-            font-weight: 500;
+            font-size: 0.95rem;
+            font-weight: 600;
             color: var(--text-primary);
+            letter-spacing: -0.1px;
         }
 
         .preview-section {
@@ -190,7 +270,7 @@
         }
 
         .canvas-container {
-            margin: 24px 0;
+            margin: 32px 0;
             display: flex;
             justify-content: center;
         }
@@ -198,83 +278,142 @@
         canvas {
             max-width: 100%;
             max-height: 500px;
-            border-radius: var(--radius-md);
-            box-shadow: var(--shadow-3);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-heavy);
             border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        canvas:hover {
+            transform: scale(1.02);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2), 0 4px 8px rgba(0, 0, 0, 0.15);
         }
 
         .preview-image {
             max-width: 100%;
             max-height: 300px;
-            border-radius: var(--radius-md);
-            margin: 16px 0;
-            box-shadow: var(--shadow-1);
+            border-radius: var(--radius-lg);
+            margin: 20px 0;
+            box-shadow: var(--shadow-medium);
             display: none;
+            transition: all 0.3s ease;
         }
 
         .actions {
             display: flex;
-            gap: 16px;
+            gap: 20px;
             justify-content: center;
             flex-wrap: wrap;
-            margin-top: 24px;
+            margin-top: 32px;
         }
 
         .btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            padding: 12px 24px;
-            border-radius: var(--radius-xl);
+            gap: 10px;
+            padding: 16px 32px;
+            border-radius: var(--radius-2xl);
             border: none;
             font-family: inherit;
-            font-size: 0.875rem;
-            font-weight: 500;
+            font-size: 1rem;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             text-decoration: none;
             white-space: nowrap;
+            position: relative;
+            overflow: hidden;
+            letter-spacing: -0.2px;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .btn:hover::before {
+            left: 100%;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, var(--primary), #4285f4);
+            background: linear-gradient(135deg, var(--primary), #5856D6);
             color: white;
-            box-shadow: var(--shadow-1);
+            box-shadow: var(--shadow-medium);
         }
 
         .btn-primary:hover {
-            transform: translateY(-1px);
-            box-shadow: var(--shadow-2);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: var(--shadow-heavy);
+        }
+
+        .btn-primary:active {
+            transform: translateY(-1px) scale(1.02);
         }
 
         .btn-secondary {
             background: var(--surface);
             color: var(--primary);
             border: 1px solid var(--border);
+            backdrop-filter: var(--blur);
+            -webkit-backdrop-filter: var(--blur);
         }
 
         .btn-secondary:hover {
             background: var(--primary-light);
             border-color: var(--primary);
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: var(--shadow-medium);
         }
 
         .status {
-            padding: 12px 16px;
-            border-radius: var(--radius-md);
-            margin: 16px 0;
+            padding: 16px 24px;
+            border-radius: var(--radius-lg);
+            margin: 20px 0;
             text-align: center;
             background: var(--primary-light);
             color: var(--primary);
+            border: 1px solid var(--border);
+            font-weight: 500;
+            backdrop-filter: var(--blur);
+            -webkit-backdrop-filter: var(--blur);
         }
 
         @media (max-width: 640px) {
-            .app-container { padding: 12px; }
-            .header { padding: 20px 16px; }
-            .logo h1 { font-size: 1.5rem; }
-            .card { padding: 20px; }
-            .upload-zone { padding: 32px 16px; }
+            .app-container { padding: 16px; }
+            .header { padding: 24px 20px; }
+            .logo h1 { font-size: 2rem; }
+            .card { padding: 24px; }
+            .upload-zone { padding: 40px 20px; }
             .actions { flex-direction: column; align-items: center; }
+        }
+
+        /* Enhanced animations */
+        @keyframes fadeInUp {
+            from { 
+                opacity: 0; 
+                transform: translateY(30px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Smooth focus states */
+        *:focus {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
         }
     </style>
 </head>
@@ -343,8 +482,66 @@
                     </button>
                 </div>
             </div>
-        </main>
-    </div>
+        <!-- Admin Access (Hidden) -->
+        <div id="adminAccess" style="position: fixed; bottom: 10px; right: 10px; opacity: 0.1; cursor: pointer;" onclick="showAdminLogin()">
+            <span style="font-size: 12px;">⚙️</span>
+        </div>
+
+        <!-- Admin Login Modal -->
+        <div id="adminModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; display: flex; align-items: center; justify-content: center;">
+            <div style="background: white; padding: 30px; border-radius: 12px; text-align: center; min-width: 300px;">
+                <h3 style="margin-bottom: 20px;">Admin Access</h3>
+                <input type="password" id="adminPassword" placeholder="Enter admin password" style="width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 6px;">
+                <div style="display: flex; gap: 10px;">
+                    <button onclick="checkAdminPassword()" style="flex: 1; padding: 12px; background: #1a73e8; color: white; border: none; border-radius: 6px; cursor: pointer;">Login</button>
+                    <button onclick="hideAdminLogin()" style="flex: 1; padding: 12px; background: #ddd; color: black; border: none; border-radius: 6px; cursor: pointer;">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Panel -->
+        <div id="adminPanel" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1001; overflow-y: auto;">
+            <div style="max-width: 800px; margin: 20px auto; background: white; border-radius: 12px; padding: 30px;">
+                <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 30px;">
+                    <h2>GoShaPica Admin Panel</h2>
+                    <button onclick="hideAdminPanel()" style="background: #ea4335; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; margin-left: auto;">Close</button>
+                </div>
+
+                <!-- Upload New Frame -->
+                <div style="margin-bottom: 40px; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
+                    <h3 style="margin-bottom: 20px;">Upload New Frame</h3>
+                    <input type="text" id="frameNameInput" placeholder="Frame name (e.g., Golden Frame)" style="width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 6px;">
+                    
+                    <div id="frameUploadArea" onclick="document.getElementById('frameFileInput').click()" style="border: 2px dashed #ddd; padding: 40px; text-align: center; cursor: pointer; border-radius: 8px; margin-bottom: 15px;">
+                        <div style="font-size: 18px; margin-bottom: 10px;">📁</div>
+                        <div>Click to upload frame PNG</div>
+                        <div style="font-size: 12px; color: #666; margin-top: 5px;">PNG with transparent center recommended</div>
+                    </div>
+                    
+                    <input type="file" id="frameFileInput" accept=".png,.jpg,.jpeg" style="display: none;" onchange="handleFrameUpload(this)">
+                    
+                    <img id="framePreviewImg" style="max-width: 200px; max-height: 200px; display: none; margin: 15px 0; border-radius: 8px;">
+                    
+                    <button id="saveFrameBtn" onclick="saveNewFrame()" style="width: 100%; padding: 15px; background: #34a853; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px;" disabled>Save Frame</button>
+                    
+                    <div id="adminStatus" style="margin-top: 15px; text-align: center;"></div>
+                </div>
+
+                <!-- Current Frame Info -->
+                <div style="padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
+                    <h3 style="margin-bottom: 15px;">Current Active Frame</h3>
+                    <div id="currentFrameInfo">
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <div id="currentFramePreview" style="width: 80px; height: 80px; border: 1px solid #ddd; border-radius: 8px; background-size: cover; background-position: center;"></div>
+                            <div>
+                                <div id="currentFrameName" style="font-weight: 500; margin-bottom: 5px;">Loading...</div>
+                                <div id="currentFrameDate" style="font-size: 12px; color: #666;">Checking for active frame...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     <script>
         console.log('GoShaPica loaded');
