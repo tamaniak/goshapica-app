@@ -428,36 +428,37 @@
             const canvas = document.getElementById('canvas');
             const ctx = canvas.getContext('2d');
             
-            const frameWidth = Math.max(20, Math.min(img.width, img.height) * 0.04);
-            
-            // Set canvas size
-            canvas.width = img.width + (frameWidth * 2);
-            canvas.height = img.height + (frameWidth * 2);
+            // Set canvas size to image size
+            canvas.width = img.width;
+            canvas.height = img.height;
             
             console.log('Canvas size:', canvas.width, 'x', canvas.height);
 
             // Clear canvas
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Draw frame background
-            const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-            gradient.addColorStop(0, '#8B4513');
-            gradient.addColorStop(0.5, '#D2B48C');
-            gradient.addColorStop(1, '#8B4513');
-            
-            ctx.fillStyle = gradient;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            // Draw image first
+            ctx.drawImage(img, 0, 0, img.width, img.height);
 
-            // Draw image in center
-            ctx.drawImage(img, frameWidth, frameWidth, img.width, img.height);
-
-            // Add inner shadow
-            ctx.strokeStyle = 'rgba(0,0,0,0.4)';
-            ctx.lineWidth = 2;
-            ctx.strokeRect(frameWidth - 1, frameWidth - 1, 
-                img.width + 2, img.height + 2);
+            // Load and draw frame overlay
+            const frameImg = new Image();
+            frameImg.onload = function() {
+                console.log('Frame overlay loaded');
+                // Draw frame on top of image
+                ctx.drawImage(frameImg, 0, 0, canvas.width, canvas.height);
+                console.log('Framed image drawn successfully');
+            };
             
-            console.log('Framed image drawn successfully');
+            frameImg.onerror = function() {
+                console.error('Frame image failed to load');
+                // Fallback to simple border
+                ctx.strokeStyle = '#8B4513';
+                ctx.lineWidth = 20;
+                ctx.strokeRect(10, 10, canvas.width - 20, canvas.height - 20);
+            };
+            
+            // Load the frame PNG (you'll upload this to GitHub)
+            frameImg.src = './frames/classic-wood.png';
         }
 
         function downloadImage() {
