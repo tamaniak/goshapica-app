@@ -159,6 +159,10 @@
             margin-bottom: 20px;
             position: relative;
             overflow: hidden;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
         }
 
         .upload-zone::before {
@@ -170,6 +174,7 @@
             height: 100%;
             background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
             transition: left 0.6s ease;
+            pointer-events: none;
         }
 
         .upload-zone:hover::before {
@@ -226,6 +231,10 @@
             position: relative;
             overflow: hidden;
             cursor: pointer;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
         }
 
         .frame-card.selected {
@@ -244,6 +253,7 @@
             background: linear-gradient(135deg, transparent, rgba(255,255,255,0.1), transparent);
             opacity: 0;
             transition: opacity 0.3s ease;
+            pointer-events: none;
         }
 
         .frame-card:hover::before {
@@ -342,6 +352,10 @@
             position: relative;
             overflow: hidden;
             letter-spacing: -0.2px;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
         }
 
         .btn:disabled {
@@ -358,6 +372,7 @@
             height: 100%;
             background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
             transition: left 0.6s ease;
+            pointer-events: none;
         }
 
         .btn:not(:disabled):hover::before {
@@ -503,15 +518,33 @@
             opacity: 0.3;
             cursor: pointer;
             z-index: 1000;
-            padding: 8px;
+            padding: 12px;
             border-radius: 50%;
             background: rgba(255,255,255,0.2);
             transition: all 0.3s ease;
+            width: 56px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid rgba(255,255,255,0.3);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
         }
 
         .admin-access:hover {
             opacity: 0.8;
             transform: scale(1.1);
+            background: rgba(255,255,255,0.3);
+            border-color: rgba(255,255,255,0.5);
+        }
+
+        .admin-access:active {
+            transform: scale(1.05);
         }
 
         .admin-panel {
@@ -544,6 +577,23 @@
             opacity: 1;
         }
 
+        /* Input styling for better touch targets */
+        input[type="text"], input[type="password"] {
+            touch-action: manipulation;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+
+        /* File input fix */
+        input[type="file"] {
+            position: absolute;
+            opacity: 0;
+            width: 0.1px;
+            height: 0.1px;
+            overflow: hidden;
+        }
+
         @media (max-width: 640px) {
             .app-container { padding: 16px; }
             .header { padding: 24px 20px; }
@@ -552,9 +602,13 @@
             .upload-zone { padding: 40px 20px; }
             .actions { flex-direction: column; align-items: center; }
             .btn { width: 100%; }
+            .admin-access {
+                bottom: 80px;
+                right: 16px;
+            }
         }
 
-        /* Smooth focus states */
+        /* Enhanced focus states for accessibility */
         *:focus {
             outline: 2px solid var(--primary);
             outline-offset: 2px;
@@ -579,6 +633,35 @@
         ::-webkit-scrollbar-thumb:hover {
             background: var(--text-secondary);
         }
+
+        /* Processing overlay improvements */
+        #processingOverlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255,255,255,0.95);
+            border-radius: var(--radius-lg);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        /* Additional hover states for better interactivity */
+        .upload-zone:focus-within {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        .frame-card:focus {
+            transform: translateY(-6px) scale(1.05);
+            box-shadow: var(--shadow-heavy);
+            border-color: var(--primary);
+        }
     </style>
 </head>
 <body>
@@ -600,7 +683,7 @@
                         <h2>Upload Your Photo</h2>
                     </div>
                     
-                    <div class="upload-zone" id="uploadZone">
+                    <div class="upload-zone" id="uploadZone" tabindex="0" role="button" aria-label="Upload photo">
                         <div class="upload-text">
                             <span class="material-icons" style="font-size: 48px; display: block; margin-bottom: 16px; opacity: 0.5;">add_photo_alternate</span>
                             Click to upload your photo
@@ -608,8 +691,8 @@
                         <div class="upload-subtext">or drag and drop • JPG, PNG up to 10MB</div>
                     </div>
                     
-                    <input type="file" id="fileInput" accept="image/*" style="display: none;">
-                    <img id="uploadedImage" class="preview-image">
+                    <input type="file" id="fileInput" accept="image/*">
+                    <img id="uploadedImage" class="preview-image" alt="Uploaded preview">
                     <div id="uploadStatus"></div>
                 </div>
 
@@ -619,7 +702,7 @@
                         <h2>Choose Your Frame</h2>
                     </div>
                     
-                    <div class="frame-grid" id="frameGrid">
+                    <div class="frame-grid" id="frameGrid" role="group" aria-label="Frame selection">
                         <!-- Frames will be dynamically loaded here -->
                     </div>
                     
@@ -635,7 +718,7 @@
                 
                 <div class="canvas-container">
                     <canvas id="canvas"></canvas>
-                    <div id="processingOverlay" style="display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,0.9); border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; flex-direction: column;">
+                    <div id="processingOverlay">
                         <div class="loading-spinner" style="width: 40px; height: 40px; margin-bottom: 16px;"></div>
                         <div style="font-weight: 600; color: var(--text-secondary);">Processing your photo...</div>
                     </div>
@@ -659,8 +742,8 @@
     <div id="toast" class="toast"></div>
 
     <!-- Admin Access -->
-    <div class="admin-access" id="adminAccess">
-        <span style="font-size: 18px;">⚙️</span>
+    <div class="admin-access" id="adminAccess" tabindex="0" role="button" aria-label="Admin access">
+        <span style="font-size: 24px;">⚙️</span>
     </div>
 
     <!-- Admin Login Modal -->
@@ -688,15 +771,15 @@
                 <h3 style="margin-bottom: 24px; font-size: 1.3rem; font-weight: 600; color: #000;">Upload New Frame</h3>
                 <input type="text" id="frameNameInput" placeholder="Frame name (e.g., Golden Frame)" style="width: 100%; padding: 16px; margin-bottom: 20px; border: 2px solid #E5E5EA; border-radius: 12px; font-size: 1rem; background: white;">
                 
-                <div id="frameUploadArea" style="border: 3px dashed #007AFF; padding: 50px; text-align: center; cursor: pointer; border-radius: 16px; margin-bottom: 20px; background: rgba(0, 122, 255, 0.05); transition: all 0.3s ease;">
+                <div id="frameUploadArea" tabindex="0" role="button" aria-label="Upload frame image" style="border: 3px dashed #007AFF; padding: 50px; text-align: center; cursor: pointer; border-radius: 16px; margin-bottom: 20px; background: rgba(0, 122, 255, 0.05); transition: all 0.3s ease;">
                     <div style="font-size: 2rem; margin-bottom: 12px;">📁</div>
                     <div style="font-size: 1.1rem; font-weight: 600; color: #007AFF; margin-bottom: 8px;">Click to upload frame PNG</div>
                     <div style="font-size: 0.9rem; color: #8E8E93;">PNG with transparent center recommended</div>
                 </div>
                 
-                <input type="file" id="frameFileInput" accept=".png,.jpg,.jpeg" style="display: none;">
+                <input type="file" id="frameFileInput" accept=".png,.jpg,.jpeg">
                 
-                <img id="framePreviewImg" style="max-width: 200px; max-height: 200px; display: none; margin: 20px auto; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: block;">
+                <img id="framePreviewImg" style="max-width: 200px; max-height: 200px; display: none; margin: 20px auto; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: block;" alt="Frame preview">
                 
                 <button id="saveFrameBtn" class="btn btn-primary" style="width: 100%;" disabled>Save Frame</button>
                 
@@ -720,7 +803,7 @@
             selectedFrame: null,
             frames: [],
             isProcessing: false,
-            adminPassword: 'goshapica2024' // In production, use secure authentication
+            adminPassword: 'goshapica2024'
         };
 
         // Frame Manager
@@ -737,549 +820,3 @@
                     {
                         id: 'modern-black',
                         name: 'Modern Black',
-                        data: this.generateDefaultFrame('#000000', 'modern'),
-                        isDefault: true
-                    },
-                    {
-                        id: 'elegant-gold',
-                        name: 'Elegant Gold',
-                        data: this.generateDefaultFrame('#FFD700', 'gold'),
-                        isDefault: true
-                    },
-                    {
-                        id: 'vintage-silver',
-                        name: 'Vintage Silver',
-                        data: this.generateDefaultFrame('#C0C0C0', 'vintage'),
-                        isDefault: true
-                    }
-                ];
-            }
-
-            generateDefaultFrame(color, style) {
-                const canvas = document.createElement('canvas');
-                canvas.width = 200;
-                canvas.height = 200;
-                const ctx = canvas.getContext('2d');
-                
-                // Different styles for variety
-                switch(style) {
-                    case 'wood':
-                        // Wood grain effect
-                        const gradient = ctx.createLinearGradient(0, 0, 200, 200);
-                        gradient.addColorStop(0, color);
-                        gradient.addColorStop(0.5, this.lightenColor(color, 20));
-                        gradient.addColorStop(1, color);
-                        ctx.fillStyle = gradient;
-                        ctx.fillRect(0, 0, 200, 200);
-                        
-                        // Wood texture
-                        ctx.globalAlpha = 0.3;
-                        for (let i = 0; i < 200; i += 8) {
-                            ctx.strokeStyle = this.darkenColor(color, 30);
-                            ctx.lineWidth = Math.random() * 2;
-                            ctx.beginPath();
-                            ctx.moveTo(0, i + Math.random() * 4);
-                            ctx.lineTo(200, i + Math.random() * 4);
-                            ctx.stroke();
-                        }
-                        break;
-                        
-                    case 'modern':
-                        // Clean modern frame
-                        ctx.fillStyle = color;
-                        ctx.fillRect(0, 0, 200, 200);
-                        ctx.fillStyle = this.lightenColor(color, 40);
-                        ctx.fillRect(10, 10, 180, 180);
-                        ctx.fillStyle = color;
-                        ctx.fillRect(15, 15, 170, 170);
-                        break;
-                        
-                    case 'gold':
-                        // Ornate gold frame
-                        const goldGradient = ctx.createRadialGradient(100, 100, 50, 100, 100, 100);
-                        goldGradient.addColorStop(0, this.lightenColor(color, 30));
-                        goldGradient.addColorStop(0.5, color);
-                        goldGradient.addColorStop(1, this.darkenColor(color, 20));
-                        ctx.fillStyle = goldGradient;
-                        ctx.fillRect(0, 0, 200, 200);
-                        
-                        // Decorative corners
-                        ctx.fillStyle = this.darkenColor(color, 40);
-                        for (let corner of [[0,0], [180,0], [0,180], [180,180]]) {
-                            ctx.beginPath();
-                            ctx.arc(corner[0] + 10, corner[1] + 10, 15, 0, Math.PI * 2);
-                            ctx.fill();
-                        }
-                        break;
-                        
-                    case 'vintage':
-                        // Distressed vintage frame
-                        ctx.fillStyle = color;
-                        ctx.fillRect(0, 0, 200, 200);
-                        
-                        // Distressed effect
-                        ctx.globalAlpha = 0.6;
-                        for (let i = 0; i < 100; i++) {
-                            ctx.fillStyle = Math.random() > 0.5 ? '#FFF' : '#000';
-                            ctx.fillRect(
-                                Math.random() * 200,
-                                Math.random() * 200,
-                                Math.random() * 4,
-                                Math.random() * 4
-                            );
-                        }
-                        break;
-                }
-                
-                // Clear center for photo
-                ctx.globalAlpha = 1;
-                ctx.globalCompositeOperation = 'destination-out';
-                ctx.fillRect(30, 30, 140, 140);
-                
-                return canvas.toDataURL();
-            }
-
-            lightenColor(color, percent) {
-                const num = parseInt(color.replace("#",""), 16);
-                const amt = Math.round(2.55 * percent);
-                const R = (num >> 16) + amt;
-                const G = (num >> 8 & 0x00FF) + amt;
-                const B = (num & 0x0000FF) + amt;
-                return "#" + (0x1000000 + (R<255?R<1?0:R:255)*0x10000 + 
-                    (G<255?G<1?0:G:255)*0x100 + (B<255?B<1?0:B:255))
-                    .toString(16).slice(1);
-            }
-
-            darkenColor(color, percent) {
-                return this.lightenColor(color, -percent);
-            }
-
-            getFrames() {
-                try {
-                    const stored = localStorage.getItem(this.storageKey);
-                    const customFrames = stored ? JSON.parse(stored) : [];
-                    return [...this.defaultFrames, ...customFrames];
-                } catch (error) {
-                    console.error('Error loading frames:', error);
-                    return this.defaultFrames;
-                }
-            }
-
-            saveFrame(frame) {
-                try {
-                    const frames = this.getFrames().filter(f => !f.isDefault);
-                    frames.push({
-                        ...frame,
-                        id: `custom-${Date.now()}`,
-                        createdAt: new Date().toISOString()
-                    });
-                    localStorage.setItem(this.storageKey, JSON.stringify(frames));
-                    return true;
-                } catch (error) {
-                    console.error('Error saving frame:', error);
-                    return false;
-                }
-            }
-
-            deleteFrame(frameId) {
-                try {
-                    const frames = this.getFrames().filter(f => !f.isDefault && f.id !== frameId);
-                    localStorage.setItem(this.storageKey, JSON.stringify(frames));
-                    return true;
-                } catch (error) {
-                    console.error('Error deleting frame:', error);
-                    return false;
-                }
-            }
-        }
-
-        // Initialize frame manager
-        const frameManager = new FrameManager();
-
-        // UI Helper Functions
-        const showToast = (message, type = 'info') => {
-            const toast = document.getElementById('toast');
-            toast.textContent = message;
-            toast.className = `toast show ${type}`;
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
-        };
-
-        const showStatus = (elementId, message, type = 'info') => {
-            const element = document.getElementById(elementId);
-            element.innerHTML = `<div class="status ${type}">${message}</div>`;
-            if (type !== 'error') {
-                setTimeout(() => {
-                    element.innerHTML = '';
-                }, 3000);
-            }
-        };
-
-        // File Upload Handling
-        const initializeUpload = () => {
-            const uploadZone = document.getElementById('uploadZone');
-            const fileInput = document.getElementById('fileInput');
-
-            uploadZone.addEventListener('click', () => fileInput.click());
-
-            // Drag and drop
-            uploadZone.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                uploadZone.classList.add('dragover');
-            });
-
-            uploadZone.addEventListener('dragleave', () => {
-                uploadZone.classList.remove('dragover');
-            });
-
-            uploadZone.addEventListener('drop', (e) => {
-                e.preventDefault();
-                uploadZone.classList.remove('dragover');
-                const files = e.dataTransfer.files;
-                if (files.length > 0) {
-                    handleFile(files[0]);
-                }
-            });
-
-            fileInput.addEventListener('change', (e) => {
-                if (e.target.files.length > 0) {
-                    handleFile(e.target.files[0]);
-                }
-            });
-        };
-
-        const handleFile = (file) => {
-            // Validation
-            if (!file.type.startsWith('image/')) {
-                showStatus('uploadStatus', 'Please select an image file (JPG, PNG)', 'error');
-                return;
-            }
-
-            if (file.size > 10 * 1024 * 1024) {
-                showStatus('uploadStatus', 'File size must be less than 10MB', 'error');
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const img = new Image();
-                img.onload = () => {
-                    app.uploadedImage = img;
-                    document.getElementById('uploadedImage').src = e.target.result;
-                    document.getElementById('uploadedImage').style.display = 'block';
-                    showStatus('uploadStatus', 'Image uploaded successfully!', 'success');
-                    
-                    // Auto-process if frame is selected
-                    if (app.selectedFrame) {
-                        processImage();
-                    }
-                };
-                img.onerror = () => {
-                    showStatus('uploadStatus', 'Error loading image. Please try again.', 'error');
-                };
-                img.src = e.target.result;
-            };
-            reader.onerror = () => {
-                showStatus('uploadStatus', 'Error reading file. Please try again.', 'error');
-            };
-            reader.readAsDataURL(file);
-        };
-
-        // Frame Selection
-        const loadFrames = () => {
-            const frameGrid = document.getElementById('frameGrid');
-            const frames = frameManager.getFrames();
-            app.frames = frames;
-
-            frameGrid.innerHTML = frames.map(frame => `
-                <div class="frame-card ${app.selectedFrame?.id === frame.id ? 'selected' : ''}" 
-                     data-frame-id="${frame.id}"
-                     onclick="selectFrame('${frame.id}')">
-                    <div class="frame-preview" style="background-image: url('${frame.data}');"></div>
-                    <div class="frame-name">${frame.name}</div>
-                </div>
-            `).join('');
-
-            // Select first frame by default
-            if (!app.selectedFrame && frames.length > 0) {
-                selectFrame(frames[0].id);
-            }
-        };
-
-        const selectFrame = (frameId) => {
-            app.selectedFrame = app.frames.find(f => f.id === frameId);
-            
-            // Update UI
-            document.querySelectorAll('.frame-card').forEach(card => {
-                card.classList.toggle('selected', card.dataset.frameId === frameId);
-            });
-
-            showStatus('frameStatus', `Selected: ${app.selectedFrame.name}`, 'info');
-
-            // Auto-process if image is uploaded
-            if (app.uploadedImage) {
-                processImage();
-            }
-        };
-
-        // Image Processing
-        const processImage = async () => {
-            if (!app.uploadedImage || !app.selectedFrame || app.isProcessing) return;
-
-            app.isProcessing = true;
-            const processingOverlay = document.getElementById('processingOverlay');
-            const previewSection = document.getElementById('previewSection');
-            const downloadBtn = document.getElementById('downloadBtn');
-
-            // Show preview section and processing overlay
-            previewSection.style.display = 'block';
-            processingOverlay.style.display = 'flex';
-            downloadBtn.disabled = true;
-
-            // Smooth scroll to preview
-            setTimeout(() => {
-                previewSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }, 100);
-
-            // Simulate processing delay for better UX
-            await new Promise(resolve => setTimeout(resolve, 800));
-
-            try {
-                const canvas = document.getElementById('canvas');
-                const ctx = canvas.getContext('2d');
-
-                // Calculate dimensions
-                const maxWidth = 800;
-                const maxHeight = 600;
-                let width = app.uploadedImage.width;
-                let height = app.uploadedImage.height;
-
-                if (width > maxWidth || height > maxHeight) {
-                    const ratio = Math.min(maxWidth / width, maxHeight / height);
-                    width *= ratio;
-                    height *= ratio;
-                }
-
-                canvas.width = width;
-                canvas.height = height;
-
-                // Draw image
-                ctx.drawImage(app.uploadedImage, 0, 0, width, height);
-
-                // Load and draw frame
-                const frameImg = new Image();
-                frameImg.onload = () => {
-                    ctx.drawImage(frameImg, 0, 0, width, height);
-                    processingOverlay.style.display = 'none';
-                    downloadBtn.disabled = false;
-                    app.isProcessing = false;
-                    showToast('Photo framed successfully!', 'success');
-                };
-                frameImg.onerror = () => {
-                    // Fallback: draw simple border
-                    ctx.strokeStyle = app.selectedFrame.color || '#8B4513';
-                    ctx.lineWidth = Math.min(width, height) * 0.05;
-                    ctx.strokeRect(
-                        ctx.lineWidth / 2,
-                        ctx.lineWidth / 2,
-                        width - ctx.lineWidth,
-                        height - ctx.lineWidth
-                    );
-                    processingOverlay.style.display = 'none';
-                    downloadBtn.disabled = false;
-                    app.isProcessing = false;
-                    showToast('Photo framed successfully!', 'success');
-                };
-                frameImg.src = app.selectedFrame.data;
-            } catch (error) {
-                console.error('Processing error:', error);
-                processingOverlay.style.display = 'none';
-                app.isProcessing = false;
-                showToast('Error processing image. Please try again.', 'error');
-            }
-        };
-
-        // Download Function
-        const downloadImage = () => {
-            const canvas = document.getElementById('canvas');
-            const link = document.createElement('a');
-            link.download = `goshapica-${app.selectedFrame.name.toLowerCase().replace(/\s+/g, '-')}-${Date.now()}.png`;
-            link.href = canvas.toDataURL('image/png', 1.0);
-            link.click();
-            showToast('Download started!', 'success');
-        };
-
-        // Reset Function
-        const resetApp = () => {
-            app.uploadedImage = null;
-            document.getElementById('uploadedImage').style.display = 'none';
-            document.getElementById('previewSection').style.display = 'none';
-            document.getElementById('fileInput').value = '';
-            document.getElementById('uploadStatus').innerHTML = '';
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            showToast('Ready for a new photo!', 'info');
-        };
-
-        // Admin Functions
-        const initializeAdmin = () => {
-            const adminAccess = document.getElementById('adminAccess');
-            const adminModal = document.getElementById('adminModal');
-            const adminPanel = document.getElementById('adminPanel');
-            const adminPassword = document.getElementById('adminPassword');
-            const frameUploadArea = document.getElementById('frameUploadArea');
-            const frameFileInput = document.getElementById('frameFileInput');
-
-            // Admin access button
-            adminAccess.addEventListener('click', () => {
-                adminModal.style.display = 'block';
-                setTimeout(() => adminModal.classList.add('show'), 10);
-                adminPassword.value = '';
-                adminPassword.focus();
-            });
-
-            // Admin login
-            document.getElementById('adminLoginBtn').addEventListener('click', () => {
-                if (adminPassword.value === app.adminPassword) {
-                    adminModal.classList.remove('show');
-                    setTimeout(() => {
-                        adminModal.style.display = 'none';
-                        adminPanel.style.display = 'block';
-                        setTimeout(() => adminPanel.classList.add('show'), 10);
-                        loadAdminPanel();
-                    }, 300);
-                } else {
-                    showToast('Invalid password', 'error');
-                    adminPassword.value = '';
-                    adminPassword.focus();
-                }
-            });
-
-            // Admin cancel
-            document.getElementById('adminCancelBtn').addEventListener('click', () => {
-                adminModal.classList.remove('show');
-                setTimeout(() => adminModal.style.display = 'none', 300);
-            });
-
-            // Admin close
-            document.getElementById('adminCloseBtn').addEventListener('click', () => {
-                adminPanel.classList.remove('show');
-                setTimeout(() => adminPanel.style.display = 'none', 300);
-            });
-
-            // Password enter key
-            adminPassword.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter') {
-                    document.getElementById('adminLoginBtn').click();
-                }
-            });
-
-            // Frame upload
-            frameUploadArea.addEventListener('click', () => frameFileInput.click());
-            frameFileInput.addEventListener('change', handleFrameUpload);
-
-            // Save frame button
-            document.getElementById('saveFrameBtn').addEventListener('click', saveNewFrame);
-        };
-
-        const loadAdminPanel = () => {
-            const frameManagement = document.getElementById('frameManagement');
-            const frames = frameManager.getFrames().filter(f => !f.isDefault);
-
-            if (frames.length === 0) {
-                frameManagement.innerHTML = '<p style="text-align: center; color: #8E8E93;">No custom frames uploaded yet</p>';
-            } else {
-                frameManagement.innerHTML = frames.map(frame => `
-                    <div style="padding: 20px; border: 1px solid #E5E5EA; border-radius: 12px; text-align: center;">
-                        <div style="width: 100px; height: 100px; margin: 0 auto 12px; background-image: url('${frame.data}'); background-size: cover; background-position: center; border-radius: 8px;"></div>
-                        <div style="font-weight: 600; margin-bottom: 8px;">${frame.name}</div>
-                        <button onclick="deleteAdminFrame('${frame.id}')" class="btn btn-secondary" style="background: #FF3B30; color: white; border: none; padding: 8px 16px; font-size: 0.9rem;">Delete</button>
-                    </div>
-                `).join('');
-            }
-        };
-
-        let uploadedFrameData = null;
-
-        const handleFrameUpload = (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
-
-            if (!file.type.startsWith('image/')) {
-                showStatus('adminStatus', 'Please select an image file', 'error');
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                uploadedFrameData = e.target.result;
-                document.getElementById('framePreviewImg').src = uploadedFrameData;
-                document.getElementById('framePreviewImg').style.display = 'block';
-                document.getElementById('saveFrameBtn').disabled = false;
-                showStatus('adminStatus', 'Frame uploaded, ready to save', 'success');
-            };
-            reader.readAsDataURL(file);
-        };
-
-        const saveNewFrame = () => {
-            const frameName = document.getElementById('frameNameInput').value.trim();
-            
-            if (!frameName) {
-                showStatus('adminStatus', 'Please enter a frame name', 'error');
-                return;
-            }
-
-            if (!uploadedFrameData) {
-                showStatus('adminStatus', 'Please upload a frame image', 'error');
-                return;
-            }
-
-            const success = frameManager.saveFrame({
-                name: frameName,
-                data: uploadedFrameData
-            });
-
-            if (success) {
-                showStatus('adminStatus', 'Frame saved successfully!', 'success');
-                // Reset form
-                document.getElementById('frameNameInput').value = '';
-                document.getElementById('frameFileInput').value = '';
-                document.getElementById('framePreviewImg').style.display = 'none';
-                document.getElementById('saveFrameBtn').disabled = true;
-                uploadedFrameData = null;
-                
-                // Reload frames
-                loadFrames();
-                loadAdminPanel();
-            } else {
-                showStatus('adminStatus', 'Error saving frame', 'error');
-            }
-        };
-
-        const deleteAdminFrame = (frameId) => {
-            if (confirm('Are you sure you want to delete this frame?')) {
-                const success = frameManager.deleteFrame(frameId);
-                if (success) {
-                    showToast('Frame deleted successfully', 'success');
-                    loadFrames();
-                    loadAdminPanel();
-                } else {
-                    showToast('Error deleting frame', 'error');
-                }
-            }
-        };
-
-        // Initialize app
-        document.addEventListener('DOMContentLoaded', () => {
-            initializeUpload();
-            loadFrames();
-            initializeAdmin();
-
-            // Set up button event listeners
-            document.getElementById('downloadBtn').addEventListener('click', downloadImage);
-            document.getElementById('resetBtn').addEventListener('click', resetApp);
-        });
-
-        // Global function bindings for inline onclick handlers
-        window.selectFrame = selectFrame;
-        window.deleteAdminFrame = deleteAdminFrame;
