@@ -2,6 +2,7 @@
  * GoShaPica Application
  * This script is structured to professional standards with a modular architecture
  * and a mock API to simulate a secure, asynchronous backend.
+ * VERSION: 1.1 - Fixed initialization bug.
  */
 (function () {
     'use strict';
@@ -18,11 +19,6 @@
 
     // --- 2. MOCK API (Simulating a Secure Backend) ---
     const api = {
-        /**
-         * Simulates a login request. In a real app, this would be an HTTPS call.
-         * @param {string} password The password to check.
-         * @returns {Promise<string>} A promise that resolves with a mock auth token.
-         */
         login(password) {
             return new Promise((resolve, reject) => {
                 setTimeout(() => {
@@ -37,31 +33,29 @@
                 }, 500);
             });
         },
-        /**
-         * Simulates fetching frames from a database.
-         * @returns {Promise<Array>} A promise that resolves with the list of frames.
-         */
         getFrames() {
-            return new Promise((resolve) => {
+            return new Promise((resolve, reject) => {
                 setTimeout(() => {
-                    const frames = JSON.parse(localStorage.getItem('goshapica_frames')) || [
-                        { id: 'classic-wood', name: 'Classic Wood', url: 'https://i.imgur.com/8x1F5s1.png' },
-                        { id: 'modern-black', name: 'Modern Black', url: 'https://i.imgur.com/uQ9YQhN.png' },
-                        { id: 'ornate-gold', name: 'Ornate Gold', url: 'https://i.imgur.com/y1vR3S9.png' },
-                    ];
-                    localStorage.setItem('goshapica_frames', JSON.stringify(frames));
-                    resolve(frames);
+                    try {
+                        const framesData = localStorage.getItem('goshapica_frames');
+                        const frames = JSON.parse(framesData) || [
+                            { id: 'classic-wood', name: 'Classic Wood', url: 'https://i.imgur.com/8x1F5s1.png' },
+                            { id: 'modern-black', name: 'Modern Black', url: 'https://i.imgur.com/uQ9YQhN.png' },
+                            { id: 'ornate-gold', name: 'Ornate Gold', url: 'https://i.imgur.com/y1vR3S9.png' },
+                        ];
+                        // Ensure the default frames are set if storage is empty/invalid
+                        if (!framesData) {
+                            localStorage.setItem('goshapica_frames', JSON.stringify(frames));
+                        }
+                        resolve(frames);
+                    } catch (e) {
+                        // This can happen if localStorage data is corrupted
+                        reject(new Error("Failed to parse frames data."));
+                    }
                 }, 300);
             });
         },
-        /**
-         * Simulates adding a new frame to the database.
-         * @param {string} name - The name of the new frame.
-         * @param {string} base64Url - The base64 data URL of the frame image.
-         * @returns {Promise<Object>} A promise that resolves with the new frame object.
-         */
         addFrame(name, base64Url) {
-            // NOTE: Authentication check would happen on a real server.
             return new Promise((resolve, reject) => {
                 if (!state.isAuthenticated) return reject(new Error('Not authorized.'));
                 setTimeout(() => {
@@ -73,13 +67,7 @@
                 }, 1000);
             });
         },
-        /**
-         * Simulates deleting a frame from the database.
-         * @param {string} frameId The ID of the frame to delete.
-         * @returns {Promise<void>}
-         */
         deleteFrame(frameId) {
-             // NOTE: Authentication check would happen on a real server.
             return new Promise((resolve, reject) => {
                 if (!state.isAuthenticated) return reject(new Error('Not authorized.'));
                 setTimeout(() => {
@@ -124,6 +112,7 @@
         },
         renderFrames() {
             const grid = getEl('frameGrid');
+            if(!grid) return;
             grid.innerHTML = state.frames.map(frame => `
                 <div class="frame-card" data-frame-id="${frame.id}" tabindex="0" role="radio" aria-checked="false">
                     <div class="frame-preview" style="background-image: url('${frame.url}')"></div>
@@ -134,53 +123,57 @@
         renderAdminFrames() {
             const grid = getEl('frameManagementGrid');
             const template = getEl('adminFrameCardTemplate');
+            if(!grid || !template) return;
             grid.innerHTML = '';
             state.frames.forEach(frame => {
                 const card = template.content.cloneNode(true);
-                card.querySelector('.admin-frame-card').dataset.frameId = frame.id;
-                card.querySelector('.admin-frame-card__img').src = frame.url;
-                card.querySelector('.admin-frame-card__img').alt = frame.name;
-                card.querySelector('.admin-frame-card__name').textContent = frame.name;
-                card.querySelector('.admin-frame-card__delete-btn').setAttribute('aria-label', `Delete ${frame.name}`);
-                grid.appendChild(card);
+                const cardElement = card.querySelector('.admin-frame-card');
+                if(cardElement) {
+                    cardElement.dataset.frameId = frame.id;
+                    card.querySelector('.admin-frame-card__img').src = frame.url;
+                    card.querySelector('.admin-frame-card__img').alt = frame.name;
+                    card.querySelector('.admin-frame-card__name').textContent = frame.name;
+                    card.querySelector('.admin-frame-card__delete-btn').setAttribute('aria-label', `Delete ${frame.name}`);
+                    grid.appendChild(card);
+                }
             });
         },
         updateDynamicUI() {
-            // Update selected frame visual
             document.querySelectorAll('.frame-card').forEach(card => {
                 const isSelected = card.dataset.frameId === state.selectedFrameId;
                 card.classList.toggle('selected', isSelected);
                 card.setAttribute('aria-checked', isSelected);
             });
-
             const canProcess = state.uploadedFile && state.selectedFrameId;
             getEl('downloadBtn').disabled = !canProcess;
             getEl('previewSection').style.display = canProcess ? 'block' : 'none';
-
             if (canProcess) core.drawCanvas();
         },
         setButtonLoading(btn, textSpan, spinner, isLoading) {
-            textSpan.textContent = isLoading ? 'Saving...' : 'Save Frame';
-            spinner.classList.toggle('u-hidden', !isLoading);
-            btn.disabled = isLoading;
+            if (textSpan) textSpan.textContent = isLoading ? 'Saving...' : 'Save Frame';
+            if (spinner) spinner.classList.toggle('u-hidden', !isLoading);
+            if (btn) btn.disabled = isLoading;
         }
     };
 
     // --- 5. CORE APPLICATION LOGIC ---
     const core = {
         async init() {
+            // FIX: Attach listeners immediately so the UI is always responsive.
+            this.attachEventListeners();
+            
             try {
+                // Then, attempt to load dynamic content.
                 state.frames = await api.getFrames();
                 ui.renderFrames();
-                this.attachEventListeners();
             } catch (error) {
+                console.error(error);
                 ui.renderStatus(getEl('frameStatus'), 'Could not load frames.', 'error');
             }
         },
         handleFileUpload(file) {
             if (!file || !file.type.startsWith('image/')) return ui.showToast('Please select a valid image file.', true);
             if (file.size > 10 * 1024 * 1024) return ui.showToast('File size must be under 10MB.', true);
-            
             state.uploadedFile = file;
             const reader = new FileReader();
             reader.onload = e => {
@@ -193,18 +186,15 @@
         },
         async drawCanvas() {
             if (!state.uploadedFile || !state.selectedFrameId) return;
-
             getEl('processingOverlay').style.display = 'flex';
             const userImg = new Image();
             userImg.src = getEl('uploadedImage').src;
             await new Promise(r => userImg.onload = r);
-            
             const frameData = state.frames.find(f => f.id === state.selectedFrameId);
             const frameImg = new Image();
             frameImg.crossOrigin = "Anonymous";
             frameImg.src = frameData.url;
             await new Promise(r => frameImg.onload = r);
-            
             const canvas = getEl('canvas');
             const ctx = canvas.getContext('2d');
             canvas.width = frameImg.naturalWidth;
@@ -223,39 +213,38 @@
             ui.showToast('Ready for a new photo!');
         },
         attachEventListeners() {
-            // User flow events
             const uploadZone = getEl('uploadZone');
-            uploadZone.addEventListener('click', () => getEl('fileInput').click());
-            getEl('fileInput').addEventListener('change', e => this.handleFileUpload(e.target.files[0]));
-            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eName => {
-                uploadZone.addEventListener(eName, e => { e.preventDefault(); e.stopPropagation(); });
-            });
-            uploadZone.addEventListener('dragover', () => uploadZone.classList.add('dragover'));
-            uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
-            uploadZone.addEventListener('drop', e => {
-                uploadZone.classList.remove('dragover');
-                this.handleFileUpload(e.dataTransfer.files[0]);
-            });
-            getEl('frameGrid').addEventListener('click', e => {
+            if (uploadZone) {
+                uploadZone.addEventListener('click', () => getEl('fileInput').click());
+                ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eName => {
+                    uploadZone.addEventListener(eName, e => { e.preventDefault(); e.stopPropagation(); });
+                });
+                uploadZone.addEventListener('dragover', () => uploadZone.classList.add('dragover'));
+                uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
+                uploadZone.addEventListener('drop', e => {
+                    uploadZone.classList.remove('dragover');
+                    this.handleFileUpload(e.dataTransfer.files[0]);
+                });
+            }
+            getEl('fileInput')?.addEventListener('change', e => this.handleFileUpload(e.target.files[0]));
+            getEl('frameGrid')?.addEventListener('click', e => {
                 const card = e.target.closest('.frame-card');
                 if (card) {
                     state.selectedFrameId = card.dataset.frameId;
                     ui.updateDynamicUI();
                 }
             });
-            getEl('downloadBtn').addEventListener('click', () => {
+            getEl('downloadBtn')?.addEventListener('click', () => {
                 const link = document.createElement('a');
                 link.download = `GoShaPica_${Date.now()}.png`;
                 link.href = getEl('canvas').toDataURL('image/png');
                 link.click();
             });
-            getEl('resetBtn').addEventListener('click', this.resetApp);
-            
-            // Admin flow events
-            getEl('adminAccessBtn').addEventListener('click', () => ui.toggleModal('adminModal', true));
-            getEl('adminCancelBtn').addEventListener('click', () => ui.toggleModal('adminModal', false));
-            getEl('adminCloseBtn').addEventListener('click', () => ui.toggleModal('adminPanel', false));
-            getEl('adminLoginForm').addEventListener('submit', async e => {
+            getEl('resetBtn')?.addEventListener('click', this.resetApp);
+            getEl('adminAccessBtn')?.addEventListener('click', () => ui.toggleModal('adminModal', true));
+            getEl('adminCancelBtn')?.addEventListener('click', () => ui.toggleModal('adminModal', false));
+            getEl('adminCloseBtn')?.addEventListener('click', () => ui.toggleModal('adminPanel', false));
+            getEl('adminLoginForm')?.addEventListener('submit', async e => {
                 e.preventDefault();
                 const password = getEl('adminPasswordInput').value;
                 try {
@@ -269,14 +258,10 @@
                     getEl('adminPasswordInput').value = '';
                 }
             });
-            getEl('addFrameForm').addEventListener('submit', async e => {
+            getEl('addFrameForm')?.addEventListener('submit', e => {
                 e.preventDefault();
-                const btn = getEl('saveFrameBtn');
-                const text = getEl('saveFrameBtnText');
-                const spinner = getEl('saveFrameSpinner');
-                const nameInput = getEl('frameNameInput');
-                const fileInput = getEl('frameFileInput');
-                
+                const btn = getEl('saveFrameBtn'), text = getEl('saveFrameBtnText'), spinner = getEl('saveFrameSpinner');
+                const nameInput = getEl('frameNameInput'), fileInput = getEl('frameFileInput');
                 ui.setButtonLoading(btn, text, spinner, true);
                 const file = fileInput.files[0];
                 const reader = new FileReader();
@@ -285,8 +270,7 @@
                     try {
                         await api.addFrame(nameInput.value, reader.result);
                         state.frames = await api.getFrames();
-                        ui.renderFrames();
-                        ui.renderAdminFrames();
+                        ui.renderFrames(); ui.renderAdminFrames();
                         e.target.reset();
                         ui.renderStatus(getEl('adminStatus'), 'Frame saved successfully!', 'success');
                     } catch (error) {
@@ -296,7 +280,7 @@
                     }
                 };
             });
-            getEl('frameManagementGrid').addEventListener('click', async e => {
+            getEl('frameManagementGrid')?.addEventListener('click', async e => {
                 const deleteBtn = e.target.closest('.admin-frame-card__delete-btn');
                 if (deleteBtn) {
                     const card = deleteBtn.closest('.admin-frame-card');
@@ -305,11 +289,9 @@
                         card.classList.add('is-deleting');
                         try {
                             await api.deleteFrame(frameId);
-                            // Give animation time to play
                             setTimeout(async () => {
                                 state.frames = await api.getFrames();
-                                ui.renderFrames();
-                                ui.renderAdminFrames();
+                                ui.renderFrames(); ui.renderAdminFrames();
                                 ui.renderStatus(getEl('adminStatus'), 'Frame deleted.', 'success');
                             }, 300);
                         } catch (error) {
@@ -323,6 +305,6 @@
     };
 
     // --- 6. INITIALIZATION ---
-    document.addEventListener('DOMContentLoaded', () => core.init());
+    core.init();
 
 })();
