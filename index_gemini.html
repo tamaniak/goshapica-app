@@ -1,1 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GoShaPica by GoShapo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&family=SF+Pro+Text:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <div id="app-root">
+        <header class="header fade-in">
+            <div class="logo">
+                <h1>GoShaPica</h1>
+            </div>
+            <p class="tagline">by GoShapo • Create beautiful framed photos in seconds</p>
+        </header>
 
+        <main class="main-content">
+            <div class="content-grid">
+                <section class="card fade-in" aria-labelledby="upload-heading">
+                    <header class="card__header">
+                        <h2 id="upload-heading">1. Upload Your Photo</h2>
+                    </header>
+                    <div class="upload-zone" id="uploadZone" tabindex="0" role="button" aria-label="Upload photo">
+                        <span class="material-icons upload-zone__icon" aria-hidden="true">add_photo_alternate</span>
+                        <p class="upload-zone__text">Click to upload your photo</p>
+                        <p class="upload-zone__subtext">or drag and drop • JPG, PNG up to 10MB</p>
+                    </div>
+                    <input type="file" id="fileInput" accept="image/jpeg, image/png" hidden>
+                    <img id="uploadedImage" class="preview-image" alt="Uploaded photo preview">
+                    <div id="uploadStatus" class="status-container"></div>
+                </section>
+
+                <section class="card fade-in" aria-labelledby="frame-heading">
+                    <header class="card__header">
+                        <h2 id="frame-heading">2. Choose Your Frame</h2>
+                    </header>
+                    <div class="frame-grid" id="frameGrid" role="radiogroup" aria-label="Frame selection">
+                        </div>
+                    <div id="frameStatus" class="status-container"></div>
+                </section>
+            </div>
+
+            <section class="card preview-section fade-in" id="previewSection" aria-labelledby="preview-heading">
+                <header class="card__header">
+                    <h2 id="preview-heading">3. Your Framed Photo</h2>
+                </header>
+                <div class="canvas-container">
+                    <canvas id="canvas"></canvas>
+                    <div id="processingOverlay" class="processing-overlay">
+                        <div class="loading-spinner loading-spinner--large"></div>
+                        <div class="processing-overlay__text">Processing your photo...</div>
+                    </div>
+                </div>
+                <div class="actions">
+                    <button class="btn btn--primary" id="downloadBtn" disabled>
+                        <span class="material-icons" aria-hidden="true">download</span> Download Photo
+                    </button>
+                    <button class="btn btn--secondary" id="resetBtn">
+                        <span class="material-icons" aria-hidden="true">refresh</span> Start Over
+                    </button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <button class="admin-access" id="adminAccessBtn" aria-label="Open Admin Panel">
+        <span class="material-icons" aria-hidden="true">admin_panel_settings</span>
+    </button>
+
+    <div id="adminModal" class="modal-overlay">
+        <div class="modal" role="dialog" aria-labelledby="admin-modal-title" aria-modal="true">
+            <h3 id="admin-modal-title" class="modal__title">Admin Access</h3>
+            <form id="adminLoginForm">
+                <input type="password" id="adminPasswordInput" placeholder="Enter admin password" class="form-input" required>
+                <div class="modal__actions">
+                    <button type="submit" class="btn btn--primary">Login</button>
+                    <button type="button" id="adminCancelBtn" class="btn btn--secondary">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div id="adminPanel" class="modal-overlay">
+        <div class="admin-panel" role="dialog" aria-labelledby="admin-panel-title" aria-modal="true">
+            <header class="admin-panel__header">
+                <h2 id="admin-panel-title">GoShaPica Admin Panel</h2>
+                <button id="adminCloseBtn" class="btn btn--danger" aria-label="Close Admin Panel">✕</button>
+            </header>
+            <div id="adminStatus" class="status-container"></div>
+            
+            <section class="admin-section" aria-labelledby="add-frame-heading">
+                <h3 id="add-frame-heading">Upload New Frame</h3>
+                <form id="addFrameForm">
+                    <input type="text" id="frameNameInput" placeholder="Frame name (e.g., Golden Frame)" class="form-input" required>
+                    <input type="file" id="frameFileInput" class="form-input" accept="image/png" required>
+                    <button type="submit" id="saveFrameBtn" class="btn btn--primary u-full-width">
+                        <span id="saveFrameBtnText">Save Frame</span>
+                        <div id="saveFrameSpinner" class="loading-spinner u-hidden"></div>
+                    </button>
+                </form>
+            </section>
+
+            <section class="admin-section" aria-labelledby="manage-frames-heading">
+                <h3 id="manage-frames-heading">Manage Frames</h3>
+                <div id="frameManagementGrid" class="frame-management-grid">
+                    </div>
+            </section>
+        </div>
+    </div>
+    
+    <template id="adminFrameCardTemplate">
+        <div class="admin-frame-card">
+            <img class="admin-frame-card__img" src="" alt="">
+            <p class="admin-frame-card__name"></p>
+            <button class="btn btn--danger btn--small admin-frame-card__delete-btn" aria-label="Delete frame">Delete</button>
+        </div>
+    </template>
+</body>
+</html>
