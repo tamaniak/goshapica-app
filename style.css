@@ -1,36 +1,9 @@
-/* ---
-1. Design System & Global Styles
---- */
+/* --- 1. Design System & Global Styles --- */
 :root {
-    --primary: #007AFF;
-    --primary-hover: #0056CC;
-    --primary-light: rgba(0, 122, 255, 0.1);
-    --secondary: #34C759;
-    --danger: #FF3B30;
-    --surface: #FFFFFF;
-    --surface-secondary: rgba(255, 255, 255, 0.8);
-    --background: #F2F2F7;
-    --text-primary: #000000;
-    --text-secondary: #8E8E93;
-    --border: rgba(0, 0, 0, 0.1);
-    --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.15);
-    --shadow-heavy: 0 8px 25px rgba(0, 0, 0, 0.15);
-    --blur: blur(20px);
-    --radius-md: 12px;
-    --radius-lg: 16px;
-    --radius-xl: 20px;
-    --radius-2xl: 24px;
+    --primary: #007AFF; --primary-hover: #0056CC; --primary-light: rgba(0, 122, 255, 0.1); --secondary: #34C759; --danger: #FF3B30; --surface: #FFFFFF; --surface-secondary: rgba(255, 255, 255, 0.8); --background: #F2F2F7; --text-primary: #000000; --text-secondary: #8E8E93; --border: rgba(0, 0, 0, 0.1); --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.15); --shadow-heavy: 0 8px 25px rgba(0, 0, 0, 0.15); --blur: blur(10px); --radius-md: 12px; --radius-lg: 16px; --radius-xl: 20px; --radius-2xl: 24px;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body {
-    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', system-ui, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: var(--text-primary);
-    line-height: 1.5;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
-
+body { font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', system-ui, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: var(--text-primary); line-height: 1.5; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
 /* --- 2. Layout & Card --- */
 #app-root { min-height: 100vh; padding: 24px; display: flex; flex-direction: column; }
 .header { text-align: center; margin-bottom: 28px; }
@@ -41,33 +14,24 @@ body {
 .card { background: var(--surface-secondary); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur); border-radius: var(--radius-2xl); padding: 32px; border: 1px solid var(--border); }
 .card__header { padding-bottom: 16px; margin-bottom: 24px; border-bottom: 1px solid var(--border); text-align: center; }
 .card__header h2 { font-size: 1.4rem; font-weight: 600; }
-
 /* --- 3. UI Components --- */
-/* Upload Zone */
 .upload-zone { border: 2px dashed var(--border); border-radius: var(--radius-lg); padding: 56px 32px; text-align: center; cursor: pointer; transition: all 0.3s ease; }
 .upload-zone:hover, .upload-zone:focus-visible { border-color: var(--primary); background: var(--primary-light); transform: translateY(-2px); }
 .upload-zone.dragover { border-color: var(--secondary); background: rgba(52, 199, 89, 0.1); }
-.upload-zone__icon { font-size: 48px; opacity: 0.5; }
-.upload-zone__text { font-size: 1.2rem; font-weight: 600; margin: 8px 0; }
-.upload-zone__subtext { font-size: 0.95rem; color: var(--text-secondary); }
+.upload-zone__text { font-size: 1.2rem; font-weight: 600; margin: 8px 0; pointer-events: none; }
+.upload-zone__subtext { font-size: 0.95rem; color: var(--text-secondary); pointer-events: none; }
 .preview-image { max-width: 100%; max-height: 300px; border-radius: var(--radius-lg); margin: 20px auto; display: none; }
-
-/* Frame Grid */
-.frame-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 20px; max-height: 400px; overflow-y: auto; padding: 4px; }
+.frame-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 20px; min-height: 140px; }
 .frame-card { border: 2px solid var(--border); border-radius: var(--radius-lg); padding: 16px; text-align: center; background: var(--surface); transition: all 0.3s ease; cursor: pointer; }
 .frame-card:hover, .frame-card:focus-visible { transform: translateY(-4px) scale(1.05); border-color: var(--primary); }
 .frame-card.selected { border-color: var(--primary); background: var(--primary-light); transform: scale(1.05); }
-.frame-preview { width: 90px; height: 90px; margin: 0 auto 12px; border-radius: var(--radius-md); background-size: cover; background-position: center; }
-.frame-name { font-size: 0.95rem; font-weight: 600; }
-
-/* Canvas & Preview */
+.frame-preview { width: 90px; height: 90px; margin: 0 auto 12px; border-radius: var(--radius-md); background-size: cover; background-position: center; pointer-events: none; }
+.frame-name { font-size: 0.95rem; font-weight: 600; pointer-events: none; }
 .preview-section { grid-column: 1 / -1; text-align: center; display: none; }
 .canvas-container { margin: 32px 0; display: flex; justify-content: center; position: relative; }
 canvas { max-width: 100%; max-height: 500px; border-radius: var(--radius-lg); box-shadow: var(--shadow-heavy); }
 .processing-overlay { position: absolute; inset: 0; background: rgba(255,255,255,0.9); border-radius: var(--radius-lg); display: none; align-items: center; justify-content: center; flex-direction: column; backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur); }
 .processing-overlay__text { font-weight: 600; color: var(--text-secondary); margin-top: 16px; }
-
-/* Buttons & Actions */
 .actions { display: flex; gap: 20px; justify-content: center; margin-top: 32px; }
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 14px 28px; border-radius: var(--radius-2xl); border: none; font-family: inherit; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; }
 .btn:disabled { opacity: 0.5; cursor: not-allowed; }
@@ -77,9 +41,8 @@ canvas { max-width: 100%; max-height: 500px; border-radius: var(--radius-lg); bo
 .btn--secondary:not(:disabled):hover { background: var(--primary-light); }
 .btn--danger { background: var(--danger); color: white; }
 .btn--small { padding: 8px 12px; border-radius: var(--radius-md); }
-
 /* --- 4. Admin & Modals --- */
-.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); opacity: 0; transition: opacity 0.3s ease; }
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 1000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(10px); -webkit-backdrop-filter: var(--blur); opacity: 0; transition: opacity 0.3s ease; }
 .modal-overlay.show { display: flex; opacity: 1; }
 .modal, .admin-panel { background: white; padding: 40px; border-radius: var(--radius-xl); box-shadow: 0 20px 40px rgba(0,0,0,0.3); transform: scale(0.95); transition: transform 0.3s ease; }
 .modal-overlay.show .modal, .modal-overlay.show .admin-panel { transform: scale(1); }
@@ -87,21 +50,30 @@ canvas { max-width: 100%; max-height: 500px; border-radius: var(--radius-lg); bo
 .modal__title { margin-bottom: 24px; font-size: 1.5rem; }
 .modal__actions { display: flex; gap: 12px; margin-top: 16px; }
 .modal__actions > .btn { flex: 1; }
-.admin-access { position: fixed; bottom: 20px; right: 20px; z-index: 100; background: var(--surface); width: 56px; height: 56px; border-radius: 50%; border: none; cursor: pointer; box-shadow: var(--shadow-medium); display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; }
+.admin-access { position: fixed; bottom: 20px; right: 20px; z-index: 100; background: var(--surface); width: 56px; height: 56px; border-radius: 50%; border: none; cursor: pointer; box-shadow: var(--shadow-medium); display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; font-size: 24px; }
 .admin-access:hover { transform: scale(1.1) rotate(15deg); box-shadow: var(--shadow-heavy); }
 .admin-panel { max-width: 900px; width: 95%; max-height: 90vh; overflow-y: auto; }
 .admin-panel__header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
 .admin-section { margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border); }
 .form-input { width: 100%; padding: 14px; margin-bottom: 16px; border: 1px solid var(--border); border-radius: var(--radius-md); font-size: 1rem; }
+.form-fieldset { border: 1px solid var(--border); padding: 16px; border-radius: var(--radius-md); margin-bottom: 16px; }
+.form-fieldset__legend { padding: 0 8px; font-weight: 500; color: var(--text-secondary); }
 .frame-management-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
-.admin-frame-card { background: var(--background); padding: 16px; border-radius: var(--radius-lg); text-align: center; display: flex; flex-direction: column; align-items: center; gap: 12px; transition: all 0.3s ease; }
+.admin-frame-card { background: var(--background); padding: 16px; border-radius: var(--radius-lg); display: flex; flex-direction: column; gap: 12px; transition: all 0.3s ease; border: 2px solid transparent; }
+.admin-frame-card.is-active { border-color: var(--secondary); box-shadow: 0 0 10px rgba(52, 199, 89, 0.3); }
 .admin-frame-card.is-deleting { opacity: 0; transform: scale(0.9); }
-.admin-frame-card__img { width: 100px; height: 100px; object-fit: contain; }
-.admin-frame-card__name { font-weight: 500; flex-grow: 1; }
-
+.admin-frame-card__header { display: flex; align-items: center; gap: 8px; width: 100%; }
+.admin-frame-card__status { width: 12px; height: 12px; border-radius: 50%; background-color: #ccc; flex-shrink: 0; }
+.admin-frame-card__status.is-active { background-color: var(--secondary); }
+.admin-frame-card__name { font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.admin-frame-card__img { width: 100%; height: 150px; object-fit: contain; background-color: rgba(0,0,0,0.02); border-radius: var(--radius-md); padding: 8px; }
+.admin-frame-card__actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%; margin-top: auto; }
 /* --- 5. Utilities & States --- */
 .u-full-width { width: 100%; }
 .u-hidden { display: none !important; }
+.u-text-small { font-size: 0.9rem; }
+.u-text-secondary { color: var(--text-secondary); }
+.u-margin-bottom { margin-bottom: 16px; }
 .fade-in { animation: fadeInUp 0.5s ease both; }
 .loading-spinner { display: inline-block; width: 20px; height: 20px; border: 3px solid rgba(0,0,0,0.1); border-left-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
 .loading-spinner--large { width: 40px; height: 40px; }
@@ -115,7 +87,6 @@ canvas { max-width: 100%; max-height: 500px; border-radius: var(--radius-lg); bo
 @keyframes spin { to { transform: rotate(360deg); } }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
 /* --- 6. Responsive --- */
 @media (max-width: 768px) { .content-grid { grid-template-columns: 1fr; } }
 @media (max-width: 640px) { #app-root { padding: 16px; } .card { padding: 24px; } .actions { flex-direction: column; } .btn { width: 100%; } }
