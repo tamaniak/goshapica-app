@@ -1,146 +1,1285 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GoShaPica by GoShapo</title>
-  <!-- Font imports -->
-  <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&family=SF+Pro+Text:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <style>
-    /* Apple-inspired design system */
-    :root {
-      --primary: #007AFF;
-      --primary-hover: #0056CC;
-      --primary-light: rgba(0, 122, 255, 0.1);
-      --secondary: #34C759;
-      --surface: #FFFFFF;
-      --surface-secondary: rgba(255,255,255,0.8);
-      --background: #F2F2F7;
-      --background-secondary: #E5E5EA;
-      --text-primary: #000;
-      --text-secondary: #8E8E93;
-      --text-tertiary: #C7C7CC;
-      --border: rgba(0,0,0,0.1);
-      --border-secondary: rgba(0,0,0,0.05);
-      --error: #FF3B30;
-      --success: #34C759;
-      --warning: #FF9500;
-      --shadow-light: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.08);
-      --shadow-medium: 0 4px 12px rgba(0,0,0,0.15), 0 2px 4px rgba(0,0,0,0.1);
-      --shadow-heavy: 0 8px 25px rgba(0,0,0,0.15), 0 3px 6px rgba(0,0,0,0.1);
-      --blur: blur(20px);
-      --radius-sm: 6px;
-      --radius-md: 12px;
-      --radius-lg: 16px;
-      --radius-xl: 20px;
-      --radius-2xl: 24px;
-    }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', system-ui, sans-serif; background: linear-gradient(135deg,#667eea 0%,#764ba2 100%); color: var(--text-primary); line-height: 1.5; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
-    .app-container { min-height: 100vh; padding: 20px; display: flex; flex-direction: column; }
-    .header { background: var(--surface-secondary); backdrop-filter: var(--blur); border: 1px solid var(--border-secondary); border-radius: var(--radius-2xl); padding: 32px; margin-bottom: 28px; box-shadow: var(--shadow-light); text-align: center; transition: transform .3s, box-shadow .3s; }
-    .header:hover { transform: translateY(-2px); box-shadow: var(--shadow-medium); }
-    .logo h1 { font-size: 2.5rem; font-weight: 700; background: linear-gradient(135deg,var(--primary),var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 8px; letter-spacing: -0.5px; }
-    .tagline { font-size: 1.1rem; color: var(--text-secondary); font-weight: 400; opacity: .9; }
-    .main-content { flex: 1; max-width: 1200px; margin: 0 auto; width: 100%; }
-    .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-bottom: 28px; }
-    @media(max-width:768px){ .content-grid {grid-template-columns:1fr;} }
-    .card { background: var(--surface-secondary); backdrop-filter: var(--blur); border: 1px solid var(--border-secondary); border-radius: var(--radius-2xl); padding: 32px; box-shadow: var(--shadow-light); transition: transform .4s, box-shadow .4s; }
-    .card:hover { transform: translateY(-4px); box-shadow: var(--shadow-heavy); }
-    .card-header { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
-    .card-header h2 { font-size: 1.4rem; font-weight: 600; color: var(--text-primary); letter-spacing: -0.3px; }
-    .upload-zone { position: relative; overflow: hidden; border: 2px dashed var(--border); border-radius: var(--radius-lg); padding: 56px 32px; text-align: center; background: var(--surface); cursor: pointer; transition: transform .4s, background .4s, border-color .4s, box-shadow .4s; }
-    .upload-zone::before { content: ''; position: absolute; top:0; left:-100%; width:100%; height:100%; background: linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent); transition:left .6s ease; }
-    .upload-zone:hover { border-color: var(--primary); background: var(--primary-light); transform: translateY(-3px) scale(1.02); box-shadow: var(--shadow-medium); }
-    .upload-zone:hover::before { left:100%; }
-    .upload-zone:active { transform: translateY(-1px) scale(1.01); }
-    .upload-zone[role="button"] { outline: none; }
-    .upload-text { font-size:1.2rem; font-weight:600; color:var(--text-primary); margin-bottom:8px; letter-spacing:-0.2px; }
-    .upload-subtext { font-size:.95rem; color:var(--text-secondary); font-weight:500; }
-    .frame-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:20px; justify-items:center; }
-    .frame-card { position:relative; overflow:hidden; background: var(--primary-light); border:2px solid var(--primary); border-radius:var(--radius-lg); padding:20px; text-align:center; box-shadow:var(--shadow-medium); transition:transform .3s, box-shadow .3s; }
-    .frame-card::before { content:''; position:absolute; inset:0; background:linear-gradient(135deg,transparent,rgba(255,255,255,.1),transparent); opacity:0; transition:opacity .3s; }
-    .frame-card:hover { transform:translateY(-6px) scale(1.05); box-shadow:var(--shadow-heavy); }
-    .frame-card:hover::before { opacity:1; }
-    .frame-preview { width:90px; height:90px; margin:0 auto 16px; border-radius:var(--radius-md); background: linear-gradient(135deg,#8B4513,#D2B48C,#8B4513); box-shadow: inset 0 0 20px rgba(0,0,0,0.3), var(--shadow-light); transition:transform .3s, box-shadow .3s; }
-    .frame-card:hover .frame-preview { transform:scale(1.1); box-shadow: inset 0 0 25px rgba(0,0,0,0.4), var(--shadow-medium); }
-    .frame-name { font-size:.95rem; font-weight:600; color:var(--text-primary); letter-spacing:-0.1px; }
-    .preview-section { display:none; grid-column:1/-1; text-align:center; }
-    .canvas-container { margin:32px 0; display:flex; justify-content:center; }
-    canvas { max-width:100%; max-height:500px; border-radius:var(--radius-lg); box-shadow:var(--shadow-heavy); border:1px solid var(--border); transition:transform .3s, box-shadow .3s; }
-    canvas:hover { transform:scale(1.02); box-shadow:0 12px 30px rgba(0,0,0,.2),0 4px 8px rgba(0,0,0,.15); }
-    .preview-image { display:none; max-width:100%; max-height:300px; border-radius:var(--radius-lg); margin:20px auto; box-shadow:var(--shadow-medium); transition:opacity .3s; }
-    .actions { display:flex; gap:20px; justify-content:center; flex-wrap:wrap; margin-top:32px; }
-    .btn { position:relative; overflow:hidden; display:inline-flex; align-items:center; justify-content:center; gap:10px; padding:16px 32px; border-radius:var(--radius-2xl); border:none; font-family:inherit; font-size:1rem; font-weight:600; cursor:pointer; transition:transform .3s, box-shadow .3s; text-decoration:none; white-space:nowrap; }
-    .btn::before { content:''; position:absolute; top:0; left:-100%; width:100%; height:100%; background:linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent); transition:left .6s ease; }
-    .btn:hover::before { left:100%; }
-    .btn-primary { background:linear-gradient(135deg,var(--primary),#5856D6); color:#fff; box-shadow:var(--shadow-medium); }
-    .btn-primary:hover { transform:translateY(-3px) scale(1.05); box-shadow:var(--shadow-heavy); }
-    .btn-primary:active { transform:translateY(-1px) scale(1.02); }
-    .btn-secondary { background:var(--surface); color:var(--primary); border:1px solid var(--border); backdrop-filter:var(--blur); }
-    .btn-secondary:hover { background:var(--primary-light); border-color:var(--primary); transform:translateY(-2px) scale(1.03); box-shadow:var(--shadow-medium); }
-    .status { padding:16px 24px; margin:20px 0; background:var(--primary-light); color:var(--primary); border:1px solid var(--border); border-radius:var(--radius-lg); text-align:center; font-weight:500; backdrop-filter:var(--blur); }
-    @media(max-width:640px){ .app-container{padding:16px;} .header{padding:24px 20px;} .logo h1{font-size:2rem;} .card{padding:24px;} .upload-zone{padding:40px 20px;} .actions{flex-direction:column;align-items:center;} }
-    @keyframes fadeInUp { from{opacity:0;transform:translateY(30px);} to{opacity:1;transform:translateY(0);} }
-    .fade-in { animation:fadeInUp .6s cubic-bezier(0.4,0,0.2,1); }
-    *:focus { outline:2px solid var(--primary); outline-offset:2px; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GoShaPica by GoShapo</title>
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&family=SF+Pro+Text:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        /* Apple-inspired design system */
+        :root {
+            --primary: #007AFF;
+            --primary-hover: #0056CC;
+            --primary-light: rgba(0, 122, 255, 0.1);
+            --secondary: #34C759;
+            --surface: #FFFFFF;
+            --surface-secondary: rgba(255, 255, 255, 0.8);
+            --background: #F2F2F7;
+            --background-secondary: #E5E5EA;
+            --text-primary: #000000;
+            --text-secondary: #8E8E93;
+            --text-tertiary: #C7C7CC;
+            --border: rgba(0, 0, 0, 0.1);
+            --border-secondary: rgba(0, 0, 0, 0.05);
+            --error: #FF3B30;
+            --success: #34C759;
+            --warning: #FF9500;
+            --shadow-light: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.08);
+            --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1);
+            --shadow-heavy: 0 8px 25px rgba(0, 0, 0, 0.15), 0 3px 6px rgba(0, 0, 0, 0.1);
+            --blur: blur(20px);
+            --radius-sm: 6px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+            --radius-2xl: 24px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', system-ui, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .app-container {
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: var(--surface-secondary);
+            backdrop-filter: var(--blur);
+            -webkit-backdrop-filter: var(--blur);
+            border-radius: var(--radius-2xl);
+            padding: 32px;
+            margin-bottom: 28px;
+            box-shadow: var(--shadow-light);
+            border: 1px solid var(--border-secondary);
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .header:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .logo h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .tagline {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            flex: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 28px;
+            margin-bottom: 28px;
+        }
+
+        @media (max-width: 768px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: var(--surface-secondary);
+            backdrop-filter: var(--blur);
+            -webkit-backdrop-filter: var(--blur);
+            border-radius: var(--radius-2xl);
+            padding: 32px;
+            box-shadow: var(--shadow-light);
+            border: 1px solid var(--border-secondary);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-heavy);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .card-header h2 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            letter-spacing: -0.3px;
+        }
+
+        .upload-zone {
+            border: 2px dashed var(--border);
+            border-radius: var(--radius-lg);
+            padding: 56px 32px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: var(--surface);
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upload-zone::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .upload-zone:hover::before {
+            left: 100%;
+        }
+
+        .upload-zone:hover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .upload-zone.dragover {
+            border-color: var(--secondary);
+            background: rgba(52, 199, 89, 0.1);
+        }
+
+        .upload-zone:active {
+            transform: translateY(-1px) scale(1.01);
+        }
+
+        .upload-text {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            letter-spacing: -0.2px;
+        }
+
+        .upload-subtext {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .frame-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 4px;
+        }
+
+        .frame-card {
+            border: 2px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            text-align: center;
+            background: var(--surface);
+            box-shadow: var(--shadow-light);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .frame-card.selected {
+            border-color: var(--primary);
+            background: var(--primary-light);
+            transform: scale(1.05);
+        }
+
+        .frame-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, transparent, rgba(255,255,255,0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .frame-card:hover::before {
+            opacity: 1;
+        }
+
+        .frame-card:hover {
+            transform: translateY(-6px) scale(1.05);
+            box-shadow: var(--shadow-heavy);
+            border-color: var(--primary);
+        }
+
+        .frame-preview {
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 16px;
+            border-radius: var(--radius-md);
+            background-size: cover;
+            background-position: center;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.3), var(--shadow-light);
+            transition: all 0.3s ease;
+        }
+
+        .frame-card:hover .frame-preview {
+            transform: scale(1.1);
+            box-shadow: inset 0 0 25px rgba(0,0,0,0.4), var(--shadow-medium);
+        }
+
+        .frame-name {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            letter-spacing: -0.1px;
+        }
+
+        .preview-section {
+            grid-column: 1 / -1;
+            text-align: center;
+            display: none;
+        }
+
+        .canvas-container {
+            margin: 32px 0;
+            display: flex;
+            justify-content: center;
+            position: relative;
+        }
+
+        canvas {
+            max-width: 100%;
+            max-height: 500px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-heavy);
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        canvas:hover {
+            transform: scale(1.02);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2), 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .preview-image {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: var(--radius-lg);
+            margin: 20px 0;
+            box-shadow: var(--shadow-medium);
+            display: none;
+            transition: all 0.3s ease;
+        }
+
+        .actions {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 32px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 16px 32px;
+            border-radius: var(--radius-2xl);
+            border: none;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            white-space: nowrap;
+            position: relative;
+            overflow: hidden;
+            letter-spacing: -0.2px;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .btn:not(:disabled):hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), #5856D6);
+            color: white;
+            box-shadow: var(--shadow-medium);
+        }
+
+        .btn-primary:not(:disabled):hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: var(--shadow-heavy);
+        }
+
+        .btn-primary:active {
+            transform: translateY(-1px) scale(1.02);
+        }
+
+        .btn-secondary {
+            background: var(--surface);
+            color: var(--primary);
+            border: 1px solid var(--border);
+            backdrop-filter: var(--blur);
+            -webkit-backdrop-filter: var(--blur);
+        }
+
+        .btn-secondary:not(:disabled):hover {
+            background: var(--primary-light);
+            border-color: var(--primary);
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .status {
+            padding: 16px 24px;
+            border-radius: var(--radius-lg);
+            margin: 20px 0;
+            text-align: center;
+            font-weight: 500;
+            backdrop-filter: var(--blur);
+            -webkit-backdrop-filter: var(--blur);
+            opacity: 0;
+            animation: fadeIn 0.3s ease forwards;
+        }
+
+        .status.success {
+            background: rgba(52, 199, 89, 0.1);
+            color: var(--success);
+            border: 1px solid rgba(52, 199, 89, 0.3);
+        }
+
+        .status.error {
+            background: rgba(255, 59, 48, 0.1);
+            color: var(--error);
+            border: 1px solid rgba(255, 59, 48, 0.3);
+        }
+
+        .status.info {
+            background: var(--primary-light);
+            color: var(--primary);
+            border: 1px solid var(--border);
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(0, 0, 0, 0.1);
+            border-left-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from { 
+                opacity: 0; 
+                transform: translateY(30px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 10000;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.show {
+            opacity: 1;
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            min-width: 350px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.show .modal-content {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        /* Admin Styles */
+        .admin-access {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            opacity: 0.3;
+            cursor: pointer;
+            z-index: 1000;
+            padding: 8px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .admin-access:hover {
+            opacity: 0.8;
+            transform: scale(1.1);
+        }
+
+        .admin-panel {
+            max-width: 900px;
+            margin: 40px auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--surface);
+            padding: 16px 24px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-heavy);
+            z-index: 20000;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        @media (max-width: 640px) {
+            .app-container { padding: 16px; }
+            .header { padding: 24px 20px; }
+            .logo h1 { font-size: 2rem; }
+            .card { padding: 24px; }
+            .upload-zone { padding: 40px 20px; }
+            .actions { flex-direction: column; align-items: center; }
+            .btn { width: 100%; }
+        }
+
+        /* Smooth focus states */
+        *:focus {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--background);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--text-tertiary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-secondary);
+        }
+    </style>
 </head>
 <body>
-  <div class="app-container">
-    <!-- Header -->
-    <header class="header">
-      <div class="logo"><h1>GoShaPica</h1></div>
-      <p class="tagline">by GoShapo • Create beautiful framed photos in seconds</p>
-    </header>
-    <!-- Main Content -->
-    <main class="main-content">
-      <div class="content-grid">
-        <!-- Upload Section -->
-        <section class="card">
-          <header class="card-header"><h2>Upload Your Photo</h2></header>
-          <div id="uploadZone" class="upload-zone" role="button" tabindex="0" aria-label="Upload photo" onclick="selectFile()" onkeydown="if(event.key==='Enter') selectFile()">
-            <div class="upload-text">Click to upload your photo</div>
-            <div class="upload-subtext">JPG, PNG up to 10MB</div>
-          </div>
-          <input type="file" id="fileInput" accept=".jpg,.jpeg,.png" hidden onchange="handleFile(this)">
-          <img id="uploadedImage" class="preview-image fade-in" alt="Uploaded photo preview">
-          <div id="uploadStatus"></div>
-        </section>
-        <!-- Frame Selection -->
-        <section class="card">
-          <header class="card-header"><h2>Choose Your Frame</h2></header>
-          <div class="frame-grid">
-            <div class="frame-card fade-in">
-              <div class="frame-preview" aria-hidden="true"></div>
-              <div class="frame-name">Classic Wood</div>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header fade-in">
+            <div class="logo">
+                <h1>GoShaPica</h1>
             </div>
-            <!-- Add more frame-card elements dynamically -->
-          </div>
-        </section>
-      </div>
-      <!-- Preview Section -->
-      <section id="previewSection" class="card preview-section">
-        <header class="card-header"><h2>Your Framed Photo</h2></header>
-        <div class="canvas-container"><canvas id="canvas"></canvas></div>
-        <div class="actions">
-          <button class="btn btn-primary" onclick="downloadImage()" aria-label="Download framed photo">
-            <span class="material-icons">download</span> Download Photo
-          </button>
-          <button class="btn btn-secondary" onclick="resetApp()" aria-label="Start over">
-            <span class="material-icons">refresh</span> Start Over
-          </button>
-        </div>
-      </section>
-    </main>
-    <!-- Admin Access Icon -->
-    <div id="adminAccess" role="button" aria-label="Admin access" style="position:fixed;bottom:20px;right:20px;opacity:.3;cursor:pointer;z-index:1000;padding:8px;border-radius:50%;background:rgba(255,255,255,.2);transition:opacity .3s;" onclick="showAdminLogin()" onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='.3'">
-      <span style="font-size:18px;">⚙️</span>
+            <p class="tagline">by GoShapo • Create beautiful framed photos in seconds</p>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="content-grid">
+                <!-- Upload Section -->
+                <div class="card fade-in">
+                    <div class="card-header">
+                        <h2>Upload Your Photo</h2>
+                    </div>
+                    
+                    <div class="upload-zone" id="uploadZone">
+                        <div class="upload-text">
+                            <span class="material-icons" style="font-size: 48px; display: block; margin-bottom: 16px; opacity: 0.5;">add_photo_alternate</span>
+                            Click to upload your photo
+                        </div>
+                        <div class="upload-subtext">or drag and drop • JPG, PNG up to 10MB</div>
+                    </div>
+                    
+                    <input type="file" id="fileInput" accept="image/*" style="display: none;">
+                    <img id="uploadedImage" class="preview-image">
+                    <div id="uploadStatus"></div>
+                </div>
+
+                <!-- Frame Selection -->
+                <div class="card fade-in">
+                    <div class="card-header">
+                        <h2>Choose Your Frame</h2>
+                    </div>
+                    
+                    <div class="frame-grid" id="frameGrid">
+                        <!-- Frames will be dynamically loaded here -->
+                    </div>
+                    
+                    <div id="frameStatus" style="margin-top: 16px;"></div>
+                </div>
+            </div>
+
+            <!-- Preview Section -->
+            <div class="card preview-section fade-in" id="previewSection">
+                <div class="card-header">
+                    <h2>Your Framed Photo</h2>
+                </div>
+                
+                <div class="canvas-container">
+                    <canvas id="canvas"></canvas>
+                    <div id="processingOverlay" style="display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,0.9); border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; flex-direction: column;">
+                        <div class="loading-spinner" style="width: 40px; height: 40px; margin-bottom: 16px;"></div>
+                        <div style="font-weight: 600; color: var(--text-secondary);">Processing your photo...</div>
+                    </div>
+                </div>
+                
+                <div class="actions">
+                    <button class="btn btn-primary" id="downloadBtn" disabled>
+                        <span class="material-icons">download</span>
+                        Download Photo
+                    </button>
+                    <button class="btn btn-secondary" id="resetBtn">
+                        <span class="material-icons">refresh</span>
+                        Start Over
+                    </button>
+                </div>
+            </div>
+        </main>
     </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <!-- Admin Access -->
+    <div class="admin-access" id="adminAccess">
+        <span style="font-size: 18px;">⚙️</span>
+    </div>
+
     <!-- Admin Login Modal -->
-    <div id="adminModal" hidden style="position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:10000;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);">
-      <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:#fff;padding:40px;border-radius:20px;text-align:center;min-width:350px;box-shadow:0 20px 40px rgba(0,0,0,.3);">
-        <h3 style="margin-bottom:24px;font-size:1.5rem;font-weight:600;color:#000;">Admin Access</h3>
-        <input type="password" id="adminPassword" placeholder="Enter admin password" style="width:100%;padding:16px;margin-bottom:20px;border:2px solid #E5E5EA;border-radius:12px;font-size:1rem;background:#F8F8F8;">
-        <div style="display:flex;gap:12px;">
+    <div id="adminModal" class="modal-overlay">
+        <div class="modal-content">
+            <h3 style="margin-bottom: 24px; font-size: 1.5rem; font-weight: 600; color: #000;">Admin Access</h3>
+            <input type="password" id="adminPassword" placeholder="Enter admin password" style="width: 100%; padding: 16px; margin-bottom: 20px; border: 2px solid #E5E5EA; border-radius: 12px; font-size: 1rem; background: #F8F8F8;">
+            <div style="display: flex; gap: 12px;">
+                <button id="adminLoginBtn" class="btn btn-primary" style="flex: 1;">Login</button>
+                <button id="adminCancelBtn" class="btn btn-secondary" style="flex: 1;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Panel -->
+    <div id="adminPanel" class="modal-overlay">
+        <div class="admin-panel">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px;">
+                <h2 style="font-size: 1.8rem; font-weight: 700; color: #000;">GoShaPica Admin Panel</h2>
+                <button id="adminCloseBtn" class="btn" style="background: #FF3B30; color: white;">✕ Close</button>
+            </div>
+
+            <!-- Upload New Frame -->
+            <div style="margin-bottom: 40px; padding: 30px; border: 2px solid #E5E5EA; border-radius: 16px; background: #F8F8F8;">
+                <h3 style="margin-bottom: 24px; font-size: 1.3rem; font-weight: 600; color: #000;">Upload New Frame</h3>
+                <input type="text" id="frameNameInput" placeholder="Frame name (e.g., Golden Frame)" style="width: 100%; padding: 16px; margin-bottom: 20px; border: 2px solid #E5E5EA; border-radius: 12px; font-size: 1rem; background: white;">
+                
+                <div id="frameUploadArea" style="border: 3px dashed #007AFF; padding: 50px; text-align: center; cursor: pointer; border-radius: 16px; margin-bottom: 20px; background: rgba(0, 122, 255, 0.05); transition: all 0.3s ease;">
+                    <div style="font-size: 2rem; margin-bottom: 12px;">📁</div>
+                    <div style="font-size: 1.1rem; font-weight: 600; color: #007AFF; margin-bottom: 8px;">Click to upload frame PNG</div>
+                    <div style="font-size: 0.9rem; color: #8E8E93;">PNG with transparent center recommended</div>
+                </div>
+                
+                <input type="file" id="frameFileInput" accept=".png,.jpg,.jpeg" style="display: none;">
+                
+                <img id="framePreviewImg" style="max-width: 200px; max-height: 200px; display: none; margin: 20px auto; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: block;">
+                
+                <button id="saveFrameBtn" class="btn btn-primary" style="width: 100%;" disabled>Save Frame</button>
+                
+                <div id="adminStatus" style="margin-top: 20px; text-align: center;"></div>
+            </div>
+
+            <!-- Current Frames -->
+            <div style="padding: 30px; border: 2px solid #E5E5EA; border-radius: 16px; background: #F8F8F8;">
+                <h3 style="margin-bottom: 20px; font-size: 1.3rem; font-weight: 600; color: #000;">Manage Frames</h3>
+                <div id="frameManagement" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+                    <!-- Frame management items will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // App State
+        const app = {
+            uploadedImage: null,
+            selectedFrame: null,
+            frames: [],
+            isProcessing: false,
+            adminPassword: 'goshapica2024' // In production, use secure authentication
+        };
+
+        // Frame Manager
+        class FrameManager {
+            constructor() {
+                this.storageKey = 'goshapica_frames';
+                this.defaultFrames = [
+                    {
+                        id: 'classic-wood',
+                        name: 'Classic Wood',
+                        data: this.generateDefaultFrame('#8B4513', 'wood'),
+                        isDefault: true
+                    },
+                    {
+                        id: 'modern-black',
+                        name: 'Modern Black',
+                        data: this.generateDefaultFrame('#000000', 'modern'),
+                        isDefault: true
+                    },
+                    {
+                        id: 'elegant-gold',
+                        name: 'Elegant Gold',
+                        data: this.generateDefaultFrame('#FFD700', 'gold'),
+                        isDefault: true
+                    },
+                    {
+                        id: 'vintage-silver',
+                        name: 'Vintage Silver',
+                        data: this.generateDefaultFrame('#C0C0C0', 'vintage'),
+                        isDefault: true
+                    }
+                ];
+            }
+
+            generateDefaultFrame(color, style) {
+                const canvas = document.createElement('canvas');
+                canvas.width = 200;
+                canvas.height = 200;
+                const ctx = canvas.getContext('2d');
+                
+                // Different styles for variety
+                switch(style) {
+                    case 'wood':
+                        // Wood grain effect
+                        const gradient = ctx.createLinearGradient(0, 0, 200, 200);
+                        gradient.addColorStop(0, color);
+                        gradient.addColorStop(0.5, this.lightenColor(color, 20));
+                        gradient.addColorStop(1, color);
+                        ctx.fillStyle = gradient;
+                        ctx.fillRect(0, 0, 200, 200);
+                        
+                        // Wood texture
+                        ctx.globalAlpha = 0.3;
+                        for (let i = 0; i < 200; i += 8) {
+                            ctx.strokeStyle = this.darkenColor(color, 30);
+                            ctx.lineWidth = Math.random() * 2;
+                            ctx.beginPath();
+                            ctx.moveTo(0, i + Math.random() * 4);
+                            ctx.lineTo(200, i + Math.random() * 4);
+                            ctx.stroke();
+                        }
+                        break;
+                        
+                    case 'modern':
+                        // Clean modern frame
+                        ctx.fillStyle = color;
+                        ctx.fillRect(0, 0, 200, 200);
+                        ctx.fillStyle = this.lightenColor(color, 40);
+                        ctx.fillRect(10, 10, 180, 180);
+                        ctx.fillStyle = color;
+                        ctx.fillRect(15, 15, 170, 170);
+                        break;
+                        
+                    case 'gold':
+                        // Ornate gold frame
+                        const goldGradient = ctx.createRadialGradient(100, 100, 50, 100, 100, 100);
+                        goldGradient.addColorStop(0, this.lightenColor(color, 30));
+                        goldGradient.addColorStop(0.5, color);
+                        goldGradient.addColorStop(1, this.darkenColor(color, 20));
+                        ctx.fillStyle = goldGradient;
+                        ctx.fillRect(0, 0, 200, 200);
+                        
+                        // Decorative corners
+                        ctx.fillStyle = this.darkenColor(color, 40);
+                        for (let corner of [[0,0], [180,0], [0,180], [180,180]]) {
+                            ctx.beginPath();
+                            ctx.arc(corner[0] + 10, corner[1] + 10, 15, 0, Math.PI * 2);
+                            ctx.fill();
+                        }
+                        break;
+                        
+                    case 'vintage':
+                        // Distressed vintage frame
+                        ctx.fillStyle = color;
+                        ctx.fillRect(0, 0, 200, 200);
+                        
+                        // Distressed effect
+                        ctx.globalAlpha = 0.6;
+                        for (let i = 0; i < 100; i++) {
+                            ctx.fillStyle = Math.random() > 0.5 ? '#FFF' : '#000';
+                            ctx.fillRect(
+                                Math.random() * 200,
+                                Math.random() * 200,
+                                Math.random() * 4,
+                                Math.random() * 4
+                            );
+                        }
+                        break;
+                }
+                
+                // Clear center for photo
+                ctx.globalAlpha = 1;
+                ctx.globalCompositeOperation = 'destination-out';
+                ctx.fillRect(30, 30, 140, 140);
+                
+                return canvas.toDataURL();
+            }
+
+            lightenColor(color, percent) {
+                const num = parseInt(color.replace("#",""), 16);
+                const amt = Math.round(2.55 * percent);
+                const R = (num >> 16) + amt;
+                const G = (num >> 8 & 0x00FF) + amt;
+                const B = (num & 0x0000FF) + amt;
+                return "#" + (0x1000000 + (R<255?R<1?0:R:255)*0x10000 + 
+                    (G<255?G<1?0:G:255)*0x100 + (B<255?B<1?0:B:255))
+                    .toString(16).slice(1);
+            }
+
+            darkenColor(color, percent) {
+                return this.lightenColor(color, -percent);
+            }
+
+            getFrames() {
+                try {
+                    const stored = localStorage.getItem(this.storageKey);
+                    const customFrames = stored ? JSON.parse(stored) : [];
+                    return [...this.defaultFrames, ...customFrames];
+                } catch (error) {
+                    console.error('Error loading frames:', error);
+                    return this.defaultFrames;
+                }
+            }
+
+            saveFrame(frame) {
+                try {
+                    const frames = this.getFrames().filter(f => !f.isDefault);
+                    frames.push({
+                        ...frame,
+                        id: `custom-${Date.now()}`,
+                        createdAt: new Date().toISOString()
+                    });
+                    localStorage.setItem(this.storageKey, JSON.stringify(frames));
+                    return true;
+                } catch (error) {
+                    console.error('Error saving frame:', error);
+                    return false;
+                }
+            }
+
+            deleteFrame(frameId) {
+                try {
+                    const frames = this.getFrames().filter(f => !f.isDefault && f.id !== frameId);
+                    localStorage.setItem(this.storageKey, JSON.stringify(frames));
+                    return true;
+                } catch (error) {
+                    console.error('Error deleting frame:', error);
+                    return false;
+                }
+            }
+        }
+
+        // Initialize frame manager
+        const frameManager = new FrameManager();
+
+        // UI Helper Functions
+        const showToast = (message, type = 'info') => {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast show ${type}`;
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        };
+
+        const showStatus = (elementId, message, type = 'info') => {
+            const element = document.getElementById(elementId);
+            element.innerHTML = `<div class="status ${type}">${message}</div>`;
+            if (type !== 'error') {
+                setTimeout(() => {
+                    element.innerHTML = '';
+                }, 3000);
+            }
+        };
+
+        // File Upload Handling
+        const initializeUpload = () => {
+            const uploadZone = document.getElementById('uploadZone');
+            const fileInput = document.getElementById('fileInput');
+
+            uploadZone.addEventListener('click', () => fileInput.click());
+
+            // Drag and drop
+            uploadZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadZone.classList.add('dragover');
+            });
+
+            uploadZone.addEventListener('dragleave', () => {
+                uploadZone.classList.remove('dragover');
+            });
+
+            uploadZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadZone.classList.remove('dragover');
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    handleFile(files[0]);
+                }
+            });
+
+            fileInput.addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    handleFile(e.target.files[0]);
+                }
+            });
+        };
+
+        const handleFile = (file) => {
+            // Validation
+            if (!file.type.startsWith('image/')) {
+                showStatus('uploadStatus', 'Please select an image file (JPG, PNG)', 'error');
+                return;
+            }
+
+            if (file.size > 10 * 1024 * 1024) {
+                showStatus('uploadStatus', 'File size must be less than 10MB', 'error');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    app.uploadedImage = img;
+                    document.getElementById('uploadedImage').src = e.target.result;
+                    document.getElementById('uploadedImage').style.display = 'block';
+                    showStatus('uploadStatus', 'Image uploaded successfully!', 'success');
+                    
+                    // Auto-process if frame is selected
+                    if (app.selectedFrame) {
+                        processImage();
+                    }
+                };
+                img.onerror = () => {
+                    showStatus('uploadStatus', 'Error loading image. Please try again.', 'error');
+                };
+                img.src = e.target.result;
+            };
+            reader.onerror = () => {
+                showStatus('uploadStatus', 'Error reading file. Please try again.', 'error');
+            };
+            reader.readAsDataURL(file);
+        };
+
+        // Frame Selection
+        const loadFrames = () => {
+            const frameGrid = document.getElementById('frameGrid');
+            const frames = frameManager.getFrames();
+            app.frames = frames;
+
+            frameGrid.innerHTML = frames.map(frame => `
+                <div class="frame-card ${app.selectedFrame?.id === frame.id ? 'selected' : ''}" 
+                     data-frame-id="${frame.id}"
+                     onclick="selectFrame('${frame.id}')">
+                    <div class="frame-preview" style="background-image: url('${frame.data}');"></div>
+                    <div class="frame-name">${frame.name}</div>
+                </div>
+            `).join('');
+
+            // Select first frame by default
+            if (!app.selectedFrame && frames.length > 0) {
+                selectFrame(frames[0].id);
+            }
+        };
+
+        const selectFrame = (frameId) => {
+            app.selectedFrame = app.frames.find(f => f.id === frameId);
+            
+            // Update UI
+            document.querySelectorAll('.frame-card').forEach(card => {
+                card.classList.toggle('selected', card.dataset.frameId === frameId);
+            });
+
+            showStatus('frameStatus', `Selected: ${app.selectedFrame.name}`, 'info');
+
+            // Auto-process if image is uploaded
+            if (app.uploadedImage) {
+                processImage();
+            }
+        };
+
+        // Image Processing
+        const processImage = async () => {
+            if (!app.uploadedImage || !app.selectedFrame || app.isProcessing) return;
+
+            app.isProcessing = true;
+            const processingOverlay = document.getElementById('processingOverlay');
+            const previewSection = document.getElementById('previewSection');
+            const downloadBtn = document.getElementById('downloadBtn');
+
+            // Show preview section and processing overlay
+            previewSection.style.display = 'block';
+            processingOverlay.style.display = 'flex';
+            downloadBtn.disabled = true;
+
+            // Smooth scroll to preview
+            setTimeout(() => {
+                previewSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100);
+
+            // Simulate processing delay for better UX
+            await new Promise(resolve => setTimeout(resolve, 800));
+
+            try {
+                const canvas = document.getElementById('canvas');
+                const ctx = canvas.getContext('2d');
+
+                // Calculate dimensions
+                const maxWidth = 800;
+                const maxHeight = 600;
+                let width = app.uploadedImage.width;
+                let height = app.uploadedImage.height;
+
+                if (width > maxWidth || height > maxHeight) {
+                    const ratio = Math.min(maxWidth / width, maxHeight / height);
+                    width *= ratio;
+                    height *= ratio;
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+
+                // Draw image
+                ctx.drawImage(app.uploadedImage, 0, 0, width, height);
+
+                // Load and draw frame
+                const frameImg = new Image();
+                frameImg.onload = () => {
+                    ctx.drawImage(frameImg, 0, 0, width, height);
+                    processingOverlay.style.display = 'none';
+                    downloadBtn.disabled = false;
+                    app.isProcessing = false;
+                    showToast('Photo framed successfully!', 'success');
+                };
+                frameImg.onerror = () => {
+                    // Fallback: draw simple border
+                    ctx.strokeStyle = app.selectedFrame.color || '#8B4513';
+                    ctx.lineWidth = Math.min(width, height) * 0.05;
+                    ctx.strokeRect(
+                        ctx.lineWidth / 2,
+                        ctx.lineWidth / 2,
+                        width - ctx.lineWidth,
+                        height - ctx.lineWidth
+                    );
+                    processingOverlay.style.display = 'none';
+                    downloadBtn.disabled = false;
+                    app.isProcessing = false;
+                    showToast('Photo framed successfully!', 'success');
+                };
+                frameImg.src = app.selectedFrame.data;
+            } catch (error) {
+                console.error('Processing error:', error);
+                processingOverlay.style.display = 'none';
+                app.isProcessing = false;
+                showToast('Error processing image. Please try again.', 'error');
+            }
+        };
+
+        // Download Function
+        const downloadImage = () => {
+            const canvas = document.getElementById('canvas');
+            const link = document.createElement('a');
+            link.download = `goshapica-${app.selectedFrame.name.toLowerCase().replace(/\s+/g, '-')}-${Date.now()}.png`;
+            link.href = canvas.toDataURL('image/png', 1.0);
+            link.click();
+            showToast('Download started!', 'success');
+        };
+
+        // Reset Function
+        const resetApp = () => {
+            app.uploadedImage = null;
+            document.getElementById('uploadedImage').style.display = 'none';
+            document.getElementById('previewSection').style.display = 'none';
+            document.getElementById('fileInput').value = '';
+            document.getElementById('uploadStatus').innerHTML = '';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            showToast('Ready for a new photo!', 'info');
+        };
+
+        // Admin Functions
+        const initializeAdmin = () => {
+            const adminAccess = document.getElementById('adminAccess');
+            const adminModal = document.getElementById('adminModal');
+            const adminPanel = document.getElementById('adminPanel');
+            const adminPassword = document.getElementById('adminPassword');
+            const frameUploadArea = document.getElementById('frameUploadArea');
+            const frameFileInput = document.getElementById('frameFileInput');
+
+            // Admin access button
+            adminAccess.addEventListener('click', () => {
+                adminModal.style.display = 'block';
+                setTimeout(() => adminModal.classList.add('show'), 10);
+                adminPassword.value = '';
+                adminPassword.focus();
+            });
+
+            // Admin login
+            document.getElementById('adminLoginBtn').addEventListener('click', () => {
+                if (adminPassword.value === app.adminPassword) {
+                    adminModal.classList.remove('show');
+                    setTimeout(() => {
+                        adminModal.style.display = 'none';
+                        adminPanel.style.display = 'block';
+                        setTimeout(() => adminPanel.classList.add('show'), 10);
+                        loadAdminPanel();
+                    }, 300);
+                } else {
+                    showToast('Invalid password', 'error');
+                    adminPassword.value = '';
+                    adminPassword.focus();
+                }
+            });
+
+            // Admin cancel
+            document.getElementById('adminCancelBtn').addEventListener('click', () => {
+                adminModal.classList.remove('show');
+                setTimeout(() => adminModal.style.display = 'none', 300);
+            });
+
+            // Admin close
+            document.getElementById('adminCloseBtn').addEventListener('click', () => {
+                adminPanel.classList.remove('show');
+                setTimeout(() => adminPanel.style.display = 'none', 300);
+            });
+
+            // Password enter key
+            adminPassword.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    document.getElementById('adminLoginBtn').click();
+                }
+            });
+
+            // Frame upload
+            frameUploadArea.addEventListener('click', () => frameFileInput.click());
+            frameFileInput.addEventListener('change', handleFrameUpload);
+
+            // Save frame button
+            document.getElementById('saveFrameBtn').addEventListener('click', saveNewFrame);
+        };
+
+        const loadAdminPanel = () => {
+            const frameManagement = document.getElementById('frameManagement');
+            const frames = frameManager.getFrames().filter(f => !f.isDefault);
+
+            if (frames.length === 0) {
+                frameManagement.innerHTML = '<p style="text-align: center; color: #8E8E93;">No custom frames uploaded yet</p>';
+            } else {
+                frameManagement.innerHTML = frames.map(frame => `
+                    <div style="padding: 20px; border: 1px solid #E5E5EA; border-radius: 12px; text-align: center;">
+                        <div style="width: 100px; height: 100px; margin: 0 auto 12px; background-image: url('${frame.data}'); background-size: cover; background-position: center; border-radius: 8px;"></div>
+                        <div style="font-weight: 600; margin-bottom: 8px;">${frame.name}</div>
+                        <button onclick="deleteAdminFrame('${frame.id}')" class="btn btn-secondary" style="background: #FF3B30; color: white; border: none; padding: 8px 16px; font-size: 0.9rem;">Delete</button>
+                    </div>
+                `).join('');
+            }
+        };
+
+        let uploadedFrameData = null;
+
+        const handleFrameUpload = (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            if (!file.type.startsWith('image/')) {
+                showStatus('adminStatus', 'Please select an image file', 'error');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                uploadedFrameData = e.target.result;
+                document.getElementById('framePreviewImg').src = uploadedFrameData;
+                document.getElementById('framePreviewImg').style.display = 'block';
+                document.getElementById('saveFrameBtn').disabled = false;
+                showStatus('adminStatus', 'Frame uploaded, ready to save', 'success');
+            };
+            reader.readAsDataURL(file);
+        };
+
+        const saveNewFrame = () => {
+            const frameName = document.getElementById('frameNameInput').value.trim();
+            
+            if (!frameName) {
+                showStatus('adminStatus', 'Please enter a frame name', 'error');
+                return;
+            }
+
+            if (!uploadedFrameData) {
+                showStatus('adminStatus', 'Please upload a frame image', 'error');
+                return;
+            }
+
+            const success = frameManager.saveFrame({
+                name: frameName,
+                data: uploadedFrameData
+            });
+
+            if (success) {
+                showStatus('adminStatus', 'Frame saved successfully!', 'success');
+                // Reset form
+                document.getElementById('frameNameInput').value = '';
+                document.getElementById('frameFileInput').value = '';
+                document.getElementById('framePreviewImg').style.display = 'none';
+                document.getElementById('saveFrameBtn').disabled = true;
+                uploadedFrameData = null;
+                
+                // Reload frames
+                loadFrames();
+                loadAdminPanel();
+            } else {
+                showStatus('adminStatus', 'Error saving frame', 'error');
+            }
+        };
+
+        const deleteAdminFrame = (frameId) => {
+            if (confirm('Are you sure you want to delete this frame?')) {
+                const success = frameManager.deleteFrame(frameId);
+                if (success) {
+                    showToast('Frame deleted successfully', 'success');
+                    loadFrames();
+                    loadAdminPanel();
+                } else {
+                    showToast('Error deleting frame', 'error');
+                }
+            }
+        };
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeUpload();
+            loadFrames();
+            initializeAdmin();
+
+            // Set up button event listeners
+            document.getElementById('downloadBtn').addEventListener('click', downloadImage);
+            document.getElementById('resetBtn').addEventListener('click', resetApp);
+        });
+
+        // Global function bindings for inline onclick handlers
+        window.selectFrame = selectFrame;
+        window.deleteAdminFrame = deleteAdminFrame;
